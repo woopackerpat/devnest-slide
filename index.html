@@ -1,1455 +1,2685 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Advanced Fullstack Bootcamp — DevNest</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-/* ═══════════════════════════════════
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Fullstack Bootcamp — DevNest</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ═══════════════════════════════════
    ROOT VARIABLES — DevNest Light Theme
 ═══════════════════════════════════ */
-:root {
-  --primary: #8635E9;
-  --primary-dark: #6D1FD0;
-  --primary-light: #A855F7;
-  --secondary: #D4A200;
-  --secondary-bg: #FFF35F;
-  --accent-orange: #E85D26;
-  --accent-red: #C0392B;
-  --accent-purple: #5B21B6;
-  --accent-green: #0E7C5E;
-  --accent-amber: #D4A200;
-  --bg-dark: #FFFEF2;
-  --bg-card: rgba(134,53,233,0.04);
-  --bg-card-hover: rgba(134,53,233,0.08);
-  --text-primary: #1A0A30;
-  --text-secondary: #4A3570;
-  --text-muted: #8B7AB3;
-  --grid-color: rgba(134,53,233,0.05);
-  --border-color: rgba(134,53,233,0.15);
-  --transition-fast: 200ms;
-  --transition-normal: 350ms;
-  --transition-slow: 500ms;
-}
+      :root {
+        --primary: #8635e9;
+        --primary-dark: #6d1fd0;
+        --primary-light: #a855f7;
+        --secondary: #d4a200;
+        --secondary-bg: #fff35f;
+        --accent-orange: #e85d26;
+        --accent-red: #c0392b;
+        --accent-purple: #5b21b6;
+        --accent-green: #0e7c5e;
+        --accent-amber: #d4a200;
+        --bg-dark: #fffef2;
+        --bg-card: rgba(134, 53, 233, 0.04);
+        --bg-card-hover: rgba(134, 53, 233, 0.08);
+        --text-primary: #1a0a30;
+        --text-secondary: #4a3570;
+        --text-muted: #8b7ab3;
+        --grid-color: rgba(134, 53, 233, 0.05);
+        --border-color: rgba(134, 53, 233, 0.15);
+        --transition-fast: 200ms;
+        --transition-normal: 350ms;
+        --transition-slow: 500ms;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    RESET & BODY
 ═══════════════════════════════════ */
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:'IBM Plex Sans Thai','Inter',sans-serif;
-  background:var(--bg-dark);
-  color:var(--text-primary);
-  overflow:hidden;
-  width:100vw;height:100vh;
-  -webkit-font-smoothing:antialiased;
-}
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
+        background: var(--bg-dark);
+        color: var(--text-primary);
+        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    GRID BACKGROUND
 ═══════════════════════════════════ */
-.grid-bg{
-  position:fixed;inset:0;
-  background-image:
-    linear-gradient(var(--grid-color) 1px,transparent 1px),
-    linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);
-  background-size:40px 40px;
-  z-index:0;pointer-events:none;
-}
-.grid-bg::after{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 0%,rgba(134,53,233,0.04) 0%,transparent 60%);
-}
+      .grid-bg {
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--grid-color) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .grid-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at 50% 0%,
+          rgba(134, 53, 233, 0.04) 0%,
+          transparent 60%
+        );
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    SLIDE CONTAINER & TRANSITIONS
 ═══════════════════════════════════ */
-.presentation{
-  position:relative;width:100vw;height:100vh;
-  overflow:hidden;z-index:1;
-}
-.slide{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;
-  padding:clamp(20px,2.5vw,44px) clamp(24px,3vw,56px) clamp(72px,8vh,96px);
-  opacity:0;visibility:hidden;
-  transform:translateX(60px);
-  transition:
-    opacity var(--transition-slow) ease,
-    transform var(--transition-slow) cubic-bezier(0.34,1.56,0.64,1),
-    visibility 0s var(--transition-slow);
-}
-.slide.active{opacity:1;visibility:visible;transform:translateX(0);transition-delay:0s}
-.slide.prev{transform:translateX(-60px)}
+      .presentation {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        z-index: 1;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        padding: clamp(20px, 2.5vw, 44px) clamp(24px, 3vw, 56px)
+          clamp(72px, 8vh, 96px);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(60px);
+        transition:
+          opacity var(--transition-slow) ease,
+          transform var(--transition-slow) cubic-bezier(0.34, 1.56, 0.64, 1),
+          visibility 0s var(--transition-slow);
+      }
+      .slide.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+        transition-delay: 0s;
+      }
+      .slide.prev {
+        transform: translateX(-60px);
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    SLIDE HEADER
 ═══════════════════════════════════ */
-.slide-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:clamp(12px,1.5vw,24px);flex-shrink:0;
-}
-.slide-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:6px 16px;border-radius:20px;
-  font-size:clamp(11px,1vw,14px);font-weight:600;
-  text-transform:uppercase;letter-spacing:0.05em;
-  background:rgba(134,53,233,0.08);color:var(--primary);
-  border:1px solid rgba(134,53,233,0.2);
-}
-.slide-badge .dot{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--primary);
-}
-.slide-number{
-  font-size:clamp(12px,1vw,15px);font-weight:500;
-  color:var(--text-muted);font-family:'Inter',monospace;
-}
+      .slide-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: clamp(12px, 1.5vw, 24px);
+        flex-shrink: 0;
+      }
+      .slide-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: clamp(11px, 1vw, 14px);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background: rgba(134, 53, 233, 0.08);
+        color: var(--primary);
+        border: 1px solid rgba(134, 53, 233, 0.2);
+      }
+      .slide-badge .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--primary);
+      }
+      .slide-number {
+        font-size: clamp(12px, 1vw, 15px);
+        font-weight: 500;
+        color: var(--text-muted);
+        font-family: "Inter", monospace;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    TYPOGRAPHY (LARGER)
 ═══════════════════════════════════ */
-.slide-title{
-  font-size:clamp(30px,4.5vw,70px);
-  font-weight:800;line-height:1.15;
-  margin-bottom:clamp(6px,0.8vw,14px);
-  letter-spacing:-0.02em;
-  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 55%,var(--secondary) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  animation:shimmer 6s ease infinite;background-size:200% 200%;
-}
-.slide-subtitle{
-  font-size:clamp(15px,1.7vw,24px);
-  color:var(--text-secondary);font-weight:400;
-  line-height:1.55;max-width:750px;
-  margin-bottom:clamp(8px,1vw,16px);
-}
-.slide-content{
-  flex:1;display:flex;flex-direction:column;
-  justify-content:center;overflow:hidden;
-}
+      .slide-title {
+        font-size: clamp(30px, 4.5vw, 70px);
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: clamp(6px, 0.8vw, 14px);
+        letter-spacing: -0.02em;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-light) 55%,
+          var(--secondary) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer 6s ease infinite;
+        background-size: 200% 200%;
+      }
+      .slide-subtitle {
+        font-size: clamp(15px, 1.7vw, 24px);
+        color: var(--text-secondary);
+        font-weight: 400;
+        line-height: 1.55;
+        max-width: 750px;
+        margin-bottom: clamp(8px, 1vw, 16px);
+      }
+      .slide-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    COVER SLIDE
 ═══════════════════════════════════ */
-.cover-content{
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;text-align:center;
-  gap:clamp(10px,1.2vw,20px);
-}
-.cover-logo-img{
-  max-height:clamp(48px,6vw,88px);
-  object-fit:contain;margin-bottom:8px;
-}
-.cover-title{
-  font-size:clamp(36px,5.5vw,80px);
-  font-weight:900;letter-spacing:-0.03em;
-  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 50%,var(--secondary) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  animation:shimmer 4s ease infinite;background-size:200% 200%;
-}
-.cover-subtitle{
-  font-size:clamp(16px,1.9vw,28px);
-  color:var(--text-secondary);font-weight:400;max-width:620px;
-}
-.cover-roles{display:flex;gap:clamp(10px,1.2vw,20px);flex-wrap:wrap;justify-content:center;margin-top:8px}
-.role-chip{
-  padding:clamp(8px,0.8vw,12px) clamp(16px,1.5vw,28px);
-  border-radius:50px;font-size:clamp(13px,1.2vw,17px);font-weight:600;
-  border:1px solid var(--border-color);background:var(--bg-card);
-  transition:all var(--transition-fast) ease;
-}
-.role-chip:hover{transform:translateY(-2px) scale(1.04)}
+      .cover-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: clamp(10px, 1.2vw, 20px);
+      }
+      .cover-logo-img {
+        max-height: clamp(48px, 6vw, 88px);
+        object-fit: contain;
+        margin-bottom: 8px;
+      }
+      .cover-title {
+        font-size: clamp(36px, 5.5vw, 80px);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-light) 50%,
+          var(--secondary) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer 4s ease infinite;
+        background-size: 200% 200%;
+      }
+      .cover-subtitle {
+        font-size: clamp(16px, 1.9vw, 28px);
+        color: var(--text-secondary);
+        font-weight: 400;
+        max-width: 620px;
+      }
+      .cover-roles {
+        display: flex;
+        gap: clamp(10px, 1.2vw, 20px);
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 8px;
+      }
+      .role-chip {
+        padding: clamp(8px, 0.8vw, 12px) clamp(16px, 1.5vw, 28px);
+        border-radius: 50px;
+        font-size: clamp(13px, 1.2vw, 17px);
+        font-weight: 600;
+        border: 1px solid var(--border-color);
+        background: var(--bg-card);
+        transition: all var(--transition-fast) ease;
+      }
+      .role-chip:hover {
+        transform: translateY(-2px) scale(1.04);
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    END SLIDE
 ═══════════════════════════════════ */
-.end-content{
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;text-align:center;gap:20px;
-}
-.end-title{
-  font-size:clamp(36px,5vw,80px);font-weight:900;
-  background:linear-gradient(135deg,var(--primary),var(--primary-light),var(--secondary));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  animation:shimmer 3s ease infinite;background-size:200% 200%;
-}
-.end-logo{max-height:clamp(40px,5vw,72px);object-fit:contain;margin-bottom:8px}
+      .end-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 20px;
+      }
+      .end-title {
+        font-size: clamp(36px, 5vw, 80px);
+        font-weight: 900;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-light),
+          var(--secondary)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer 3s ease infinite;
+        background-size: 200% 200%;
+      }
+      .end-logo {
+        max-height: clamp(40px, 5vw, 72px);
+        object-fit: contain;
+        margin-bottom: 8px;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    CARDS GRID
 ═══════════════════════════════════ */
-.cards-grid{display:grid;gap:clamp(10px,1.2vw,18px);max-width:1200px;margin:0 auto;width:100%}
-.cards-grid.cols-2{grid-template-columns:repeat(2,1fr)}
-.cards-grid.cols-3{grid-template-columns:repeat(3,1fr)}
-.cards-grid.cols-4{grid-template-columns:repeat(4,1fr)}
-.card{
-  padding:clamp(14px,1.5vw,24px);border-radius:14px;
-  border:1px solid var(--border-color);background:var(--bg-card);
-  backdrop-filter:blur(8px);
-  transition:all var(--transition-fast) ease;
-}
-.card:hover{transform:translateY(-3px);background:var(--bg-card-hover);border-color:rgba(134,53,233,0.3)}
-.card-icon{font-size:clamp(24px,2.5vw,40px);margin-bottom:clamp(6px,0.7vw,12px)}
-.card-title{font-size:clamp(14px,1.5vw,20px);font-weight:700;margin-bottom:clamp(4px,0.5vw,8px);color:var(--text-primary)}
-.card-desc{font-size:clamp(12px,1.1vw,16px);color:var(--text-secondary);line-height:1.55}
-.card-tag{display:inline-block;padding:3px 10px;border-radius:12px;font-size:clamp(10px,0.9vw,13px);font-weight:600;margin-top:8px}
-.tag-blue{background:rgba(134,53,233,0.1);color:var(--primary)}
-.tag-green{background:rgba(14,124,94,0.1);color:#0E7C5E}
-.tag-orange{background:rgba(212,162,0,0.12);color:#8A6000}
-.tag-yellow{background:rgba(255,243,95,0.35);color:#6B5200;border:1px solid rgba(212,162,0,0.3)}
-.tag-red{background:rgba(192,57,43,0.1);color:#C0392B}
-.tag-purple{background:rgba(91,33,182,0.1);color:#5B21B6}
+      .cards-grid {
+        display: grid;
+        gap: clamp(10px, 1.2vw, 18px);
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .cards-grid.cols-2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .cards-grid.cols-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .cards-grid.cols-4 {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .card {
+        padding: clamp(14px, 1.5vw, 24px);
+        border-radius: 14px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-card);
+        backdrop-filter: blur(8px);
+        transition: all var(--transition-fast) ease;
+      }
+      .card:hover {
+        transform: translateY(-3px);
+        background: var(--bg-card-hover);
+        border-color: rgba(134, 53, 233, 0.3);
+      }
+      .card-icon {
+        font-size: clamp(24px, 2.5vw, 40px);
+        margin-bottom: clamp(6px, 0.7vw, 12px);
+      }
+      .card-title {
+        font-size: clamp(14px, 1.5vw, 20px);
+        font-weight: 700;
+        margin-bottom: clamp(4px, 0.5vw, 8px);
+        color: var(--text-primary);
+      }
+      .card-desc {
+        font-size: clamp(12px, 1.1vw, 16px);
+        color: var(--text-secondary);
+        line-height: 1.55;
+      }
+      .card-tag {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: clamp(10px, 0.9vw, 13px);
+        font-weight: 600;
+        margin-top: 8px;
+      }
+      .tag-blue {
+        background: rgba(134, 53, 233, 0.1);
+        color: var(--primary);
+      }
+      .tag-green {
+        background: rgba(14, 124, 94, 0.1);
+        color: #0e7c5e;
+      }
+      .tag-orange {
+        background: rgba(212, 162, 0, 0.12);
+        color: #8a6000;
+      }
+      .tag-yellow {
+        background: rgba(255, 243, 95, 0.35);
+        color: #6b5200;
+        border: 1px solid rgba(212, 162, 0, 0.3);
+      }
+      .tag-red {
+        background: rgba(192, 57, 43, 0.1);
+        color: #c0392b;
+      }
+      .tag-purple {
+        background: rgba(91, 33, 182, 0.1);
+        color: #5b21b6;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    FLOW STEPS
 ═══════════════════════════════════ */
-.flow-container{display:flex;flex-direction:column;gap:clamp(10px,1.2vw,18px);max-width:1200px;margin:0 auto;width:100%}
-.flow-row{display:flex;align-items:center;gap:clamp(6px,0.7vw,12px);flex-wrap:wrap;justify-content:center}
-.flow-step{
-  display:flex;align-items:center;gap:clamp(4px,0.5vw,8px);
-  padding:clamp(9px,0.9vw,15px) clamp(13px,1.3vw,22px);
-  border-radius:10px;font-size:clamp(12px,1.2vw,17px);
-  font-weight:500;border:1px solid var(--border-color);
-  background:var(--bg-card);backdrop-filter:blur(8px);
-  transition:all var(--transition-fast) ease;white-space:nowrap;
-}
-.flow-step:hover{transform:translateY(-2px);background:var(--bg-card-hover)}
-.flow-step .icon{font-size:clamp(14px,1.4vw,20px)}
-.flow-arrow{color:var(--text-muted);font-size:clamp(16px,1.6vw,24px);flex-shrink:0}
-.flow-step.highlight-blue{background:rgba(134,53,233,0.08);border-color:rgba(134,53,233,0.25);color:var(--primary-dark)}
-.flow-step.highlight-green{background:rgba(14,124,94,0.08);border-color:rgba(14,124,94,0.25);color:#0E7C5E}
-.flow-step.highlight-orange{background:rgba(212,162,0,0.1);border-color:rgba(212,162,0,0.3);color:#8A6000}
-.flow-step.highlight-yellow{background:rgba(255,243,95,0.3);border-color:rgba(212,162,0,0.35);color:#6B5200}
-.flow-step.highlight-red{background:rgba(192,57,43,0.08);border-color:rgba(192,57,43,0.25);color:#C0392B}
-.flow-step.highlight-purple{background:rgba(91,33,182,0.08);border-color:rgba(91,33,182,0.25);color:#5B21B6}
-.v-arrow{color:var(--text-muted);font-size:clamp(14px,1.4vw,20px);text-align:center}
+      .flow-container {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(10px, 1.2vw, 18px);
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .flow-row {
+        display: flex;
+        align-items: center;
+        gap: clamp(6px, 0.7vw, 12px);
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .flow-step {
+        display: flex;
+        align-items: center;
+        gap: clamp(4px, 0.5vw, 8px);
+        padding: clamp(9px, 0.9vw, 15px) clamp(13px, 1.3vw, 22px);
+        border-radius: 10px;
+        font-size: clamp(12px, 1.2vw, 17px);
+        font-weight: 500;
+        border: 1px solid var(--border-color);
+        background: var(--bg-card);
+        backdrop-filter: blur(8px);
+        transition: all var(--transition-fast) ease;
+        white-space: nowrap;
+      }
+      .flow-step:hover {
+        transform: translateY(-2px);
+        background: var(--bg-card-hover);
+      }
+      .flow-step .icon {
+        font-size: clamp(14px, 1.4vw, 20px);
+      }
+      .flow-arrow {
+        color: var(--text-muted);
+        font-size: clamp(16px, 1.6vw, 24px);
+        flex-shrink: 0;
+      }
+      .flow-step.highlight-blue {
+        background: rgba(134, 53, 233, 0.08);
+        border-color: rgba(134, 53, 233, 0.25);
+        color: var(--primary-dark);
+      }
+      .flow-step.highlight-green {
+        background: rgba(14, 124, 94, 0.08);
+        border-color: rgba(14, 124, 94, 0.25);
+        color: #0e7c5e;
+      }
+      .flow-step.highlight-orange {
+        background: rgba(212, 162, 0, 0.1);
+        border-color: rgba(212, 162, 0, 0.3);
+        color: #8a6000;
+      }
+      .flow-step.highlight-yellow {
+        background: rgba(255, 243, 95, 0.3);
+        border-color: rgba(212, 162, 0, 0.35);
+        color: #6b5200;
+      }
+      .flow-step.highlight-red {
+        background: rgba(192, 57, 43, 0.08);
+        border-color: rgba(192, 57, 43, 0.25);
+        color: #c0392b;
+      }
+      .flow-step.highlight-purple {
+        background: rgba(91, 33, 182, 0.08);
+        border-color: rgba(91, 33, 182, 0.25);
+        color: #5b21b6;
+      }
+      .v-arrow {
+        color: var(--text-muted);
+        font-size: clamp(14px, 1.4vw, 20px);
+        text-align: center;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    SPLIT ROW & MINI CARDS
 ═══════════════════════════════════ */
-.split-row{display:flex;gap:clamp(8px,1vw,16px);justify-content:center;flex-wrap:wrap}
-.mini-card{
-  flex:1;min-width:190px;max-width:340px;
-  padding:clamp(12px,1.2vw,20px);border-radius:12px;
-  border:1px solid var(--border-color);background:var(--bg-card);
-}
-.mini-card-title{font-size:clamp(13px,1.3vw,18px);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.mini-card ul{list-style:none;display:flex;flex-direction:column;gap:5px}
-.mini-card ul li{
-  font-size:clamp(12px,1.1vw,16px);color:var(--text-secondary);
-  padding-left:14px;position:relative;line-height:1.5;
-}
-.mini-card ul li::before{content:'›';position:absolute;left:0;color:var(--primary);font-weight:700}
+      .split-row {
+        display: flex;
+        gap: clamp(8px, 1vw, 16px);
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .mini-card {
+        flex: 1;
+        min-width: 190px;
+        max-width: 340px;
+        padding: clamp(12px, 1.2vw, 20px);
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-card);
+      }
+      .mini-card-title {
+        font-size: clamp(13px, 1.3vw, 18px);
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .mini-card ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .mini-card ul li {
+        font-size: clamp(12px, 1.1vw, 16px);
+        color: var(--text-secondary);
+        padding-left: 14px;
+        position: relative;
+        line-height: 1.5;
+      }
+      .mini-card ul li::before {
+        content: "›";
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+        font-weight: 700;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    TWO COLUMN
 ═══════════════════════════════════ */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2vw,32px);max-width:1200px;margin:0 auto;width:100%}
-.col-section{display:flex;flex-direction:column;gap:clamp(8px,1vw,14px)}
-.section-label{
-  font-size:clamp(12px,1.1vw,16px);font-weight:700;text-transform:uppercase;
-  letter-spacing:0.1em;color:var(--primary);margin-bottom:clamp(6px,0.8vw,12px);
-  padding-bottom:8px;border-bottom:2px solid rgba(134,53,233,0.2);
-}
-.bullet-list{list-style:none;display:flex;flex-direction:column;gap:clamp(7px,0.8vw,11px)}
-.bullet-list li{
-  display:flex;align-items:flex-start;gap:clamp(8px,0.8vw,12px);
-  font-size:clamp(13px,1.4vw,19px);color:var(--text-secondary);line-height:1.5;
-}
-.bullet-list li .bullet{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--primary);flex-shrink:0;margin-top:7px;
-}
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(16px, 2vw, 32px);
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .col-section {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(8px, 1vw, 14px);
+      }
+      .section-label {
+        font-size: clamp(12px, 1.1vw, 16px);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--primary);
+        margin-bottom: clamp(6px, 0.8vw, 12px);
+        padding-bottom: 8px;
+        border-bottom: 2px solid rgba(134, 53, 233, 0.2);
+      }
+      .bullet-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(7px, 0.8vw, 11px);
+      }
+      .bullet-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: clamp(8px, 0.8vw, 12px);
+        font-size: clamp(13px, 1.4vw, 19px);
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+      .bullet-list li .bullet {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--primary);
+        flex-shrink: 0;
+        margin-top: 7px;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    PHOTO GALLERY (CLASSROOM)
 ═══════════════════════════════════ */
-.photo-grid{
-  display:grid;grid-template-columns:repeat(2,1fr);
-  gap:clamp(8px,1vw,16px);max-width:1100px;margin:0 auto;width:100%;
-}
-.photo-item{
-  border-radius:14px;overflow:hidden;
-  border:1px solid var(--border-color);
-  cursor:pointer;transition:all var(--transition-fast) ease;
-  aspect-ratio:16/9;
-}
-.photo-item:hover{transform:scale(1.02);box-shadow:0 8px 32px rgba(134,53,233,0.15)}
-.photo-item img{width:100%;height:100%;object-fit:cover}
+      .photo-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: clamp(8px, 1vw, 16px);
+        max-width: 1100px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .photo-item {
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all var(--transition-fast) ease;
+        aspect-ratio: 16/9;
+      }
+      .photo-item:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 32px rgba(134, 53, 233, 0.15);
+      }
+      .photo-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    TEACHER / MENTOR CARDS
 ═══════════════════════════════════ */
-.team-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,1.5vw,20px);width:100%}
-.team-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,28px);width:100%;max-width:820px;margin:0 auto}
-.team-card{
-  background:var(--bg-card);border:1px solid var(--border-color);
-  border-radius:18px;padding:clamp(18px,2vw,28px) clamp(14px,1.5vw,20px);
-  display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px;
-  transition:all var(--transition-fast) ease;
-}
-.team-card:hover{transform:translateY(-4px);background:var(--bg-card-hover);border-color:rgba(134,53,233,0.3)}
-.team-card img{
-  width:clamp(96px,9vw,130px);height:clamp(96px,9vw,130px);border-radius:50%;
-  object-fit:cover;object-position:top;
-  border:4px solid var(--primary);margin-bottom:6px;
-  box-shadow:0 4px 16px rgba(134,53,233,0.18);
-}
-.team-card.mentor img{
-  width:clamp(110px,11vw,150px);height:clamp(110px,11vw,150px);
-  border-color:rgba(212,162,0,0.7);
-  box-shadow:0 4px 16px rgba(212,162,0,0.18);
-}
-.team-name{font-size:clamp(14px,1.4vw,19px);font-weight:700}
-.team-role{font-size:clamp(11px,1vw,13px);color:var(--text-muted)}
-.team-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:4px}
-.team-tag{
-  background:rgba(134,53,233,0.08);border:1px solid rgba(134,53,233,0.2);
-  color:var(--primary);padding:2px 9px;border-radius:20px;font-size:clamp(9px,0.85vw,12px);
-}
+      .team-grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: clamp(14px, 1.5vw, 20px);
+        width: 100%;
+      }
+      .team-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: clamp(16px, 2vw, 28px);
+        width: 100%;
+        max-width: 820px;
+        margin: 0 auto;
+      }
+      .team-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 18px;
+        padding: clamp(18px, 2vw, 28px) clamp(14px, 1.5vw, 20px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 9px;
+        transition: all var(--transition-fast) ease;
+      }
+      .team-card:hover {
+        transform: translateY(-4px);
+        background: var(--bg-card-hover);
+        border-color: rgba(134, 53, 233, 0.3);
+      }
+      .team-card img {
+        width: clamp(96px, 9vw, 130px);
+        height: clamp(96px, 9vw, 130px);
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: top;
+        border: 4px solid var(--primary);
+        margin-bottom: 6px;
+        box-shadow: 0 4px 16px rgba(134, 53, 233, 0.18);
+      }
+      .team-card.mentor img {
+        width: clamp(110px, 11vw, 150px);
+        height: clamp(110px, 11vw, 150px);
+        border-color: rgba(212, 162, 0, 0.7);
+        box-shadow: 0 4px 16px rgba(212, 162, 0, 0.18);
+      }
+      .team-name {
+        font-size: clamp(14px, 1.4vw, 19px);
+        font-weight: 700;
+      }
+      .team-role {
+        font-size: clamp(11px, 1vw, 13px);
+        color: var(--text-muted);
+      }
+      .team-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center;
+        margin-top: 4px;
+      }
+      .team-tag {
+        background: rgba(134, 53, 233, 0.08);
+        border: 1px solid rgba(134, 53, 233, 0.2);
+        color: var(--primary);
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: clamp(9px, 0.85vw, 12px);
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    TRACK COMPARISON CARDS
 ═══════════════════════════════════ */
-.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2vw,28px);width:100%}
-.track-card{border-radius:18px;padding:clamp(20px,2vw,32px)}
-.track-adv{background:linear-gradient(145deg,rgba(134,53,233,0.08),rgba(134,53,233,0.02));border:1px solid rgba(134,53,233,0.3)}
-.track-onl{background:linear-gradient(145deg,rgba(255,243,95,0.18),rgba(255,243,95,0.04));border:1px solid rgba(212,162,0,0.3)}
-.track-head{font-size:clamp(18px,2vw,26px);font-weight:700;margin-bottom:4px}
-.track-dur{font-size:clamp(12px,1.1vw,15px);color:var(--text-muted);margin-bottom:18px}
-.track-item{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 0;font-size:clamp(13px,1.2vw,17px);
-  border-bottom:1px solid rgba(134,53,233,0.07);
-}
-.track-item:last-child{border-bottom:none}
-.track-item.x{color:var(--text-muted);text-decoration:line-through}
-.ico{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
-.iy{background:rgba(134,53,233,0.15);color:var(--primary)}
-.in{background:rgba(0,0,0,0.05);color:var(--text-muted)}
+      .track-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(16px, 2vw, 28px);
+        width: 100%;
+      }
+      .track-card {
+        border-radius: 18px;
+        padding: clamp(20px, 2vw, 32px);
+      }
+      .track-adv {
+        background: linear-gradient(
+          145deg,
+          rgba(134, 53, 233, 0.08),
+          rgba(134, 53, 233, 0.02)
+        );
+        border: 1px solid rgba(134, 53, 233, 0.3);
+      }
+      .track-onl {
+        background: linear-gradient(
+          145deg,
+          rgba(255, 243, 95, 0.18),
+          rgba(255, 243, 95, 0.04)
+        );
+        border: 1px solid rgba(212, 162, 0, 0.3);
+      }
+      .track-head {
+        font-size: clamp(18px, 2vw, 26px);
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .track-dur {
+        font-size: clamp(12px, 1.1vw, 15px);
+        color: var(--text-muted);
+        margin-bottom: 18px;
+      }
+      .track-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        font-size: clamp(13px, 1.2vw, 17px);
+        border-bottom: 1px solid rgba(134, 53, 233, 0.07);
+      }
+      .track-item:last-child {
+        border-bottom: none;
+      }
+      .track-item.x {
+        color: var(--text-muted);
+        text-decoration: line-through;
+      }
+      .ico {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        flex-shrink: 0;
+      }
+      .iy {
+        background: rgba(134, 53, 233, 0.15);
+        color: var(--primary);
+      }
+      .in {
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text-muted);
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    TECH GRID
 ═══════════════════════════════════ */
-.tech-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.2vw,18px);width:100%}
-.tc{background:var(--bg-card);border:1px solid var(--border-color);border-radius:14px;padding:clamp(16px,1.6vw,22px)}
-.tc-t{font-size:clamp(10px,0.9vw,13px);font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--primary);margin-bottom:13px;padding-bottom:10px;border-bottom:1px solid var(--border-color)}
-.tc-tags{display:flex;flex-wrap:wrap;gap:7px}
-.tg{background:rgba(134,53,233,0.07);border:1px solid rgba(134,53,233,0.18);color:var(--text-secondary);padding:5px 11px;border-radius:7px;font-size:clamp(12px,1.1vw,15px);font-weight:500}
-.tg.hl{background:rgba(255,243,95,0.25);border-color:rgba(212,162,0,0.3);color:#6B5200}
+      .tech-cols {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: clamp(12px, 1.2vw, 18px);
+        width: 100%;
+      }
+      .tc {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        padding: clamp(16px, 1.6vw, 22px);
+      }
+      .tc-t {
+        font-size: clamp(10px, 0.9vw, 13px);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--primary);
+        margin-bottom: 13px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .tc-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+      .tg {
+        background: rgba(134, 53, 233, 0.07);
+        border: 1px solid rgba(134, 53, 233, 0.18);
+        color: var(--text-secondary);
+        padding: 5px 11px;
+        border-radius: 7px;
+        font-size: clamp(12px, 1.1vw, 15px);
+        font-weight: 500;
+      }
+      .tg.hl {
+        background: rgba(255, 243, 95, 0.25);
+        border-color: rgba(212, 162, 0, 0.3);
+        color: #6b5200;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    HIGHLIGHT / BADGE
 ═══════════════════════════════════ */
-.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:clamp(11px,1vw,14px);font-weight:600;text-transform:uppercase;letter-spacing:1px}
-.badge-purple{background:rgba(134,53,233,0.1);border:1px solid rgba(134,53,233,0.25);color:var(--primary)}
-.badge-yellow{background:rgba(255,243,95,0.3);border:1px solid rgba(212,162,0,0.3);color:#6B5200}
-.hl-star{font-size:clamp(11px,1vw,13px);font-weight:700;padding:3px 10px;border-radius:10px;background:rgba(255,243,95,0.3);border:1px solid rgba(212,162,0,0.3);color:#6B5200;margin-left:6px}
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: clamp(11px, 1vw, 14px);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .badge-purple {
+        background: rgba(134, 53, 233, 0.1);
+        border: 1px solid rgba(134, 53, 233, 0.25);
+        color: var(--primary);
+      }
+      .badge-yellow {
+        background: rgba(255, 243, 95, 0.3);
+        border: 1px solid rgba(212, 162, 0, 0.3);
+        color: #6b5200;
+      }
+      .hl-star {
+        font-size: clamp(11px, 1vw, 13px);
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 10px;
+        background: rgba(255, 243, 95, 0.3);
+        border: 1px solid rgba(212, 162, 0, 0.3);
+        color: #6b5200;
+        margin-left: 6px;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    NAVIGATION BAR
 ═══════════════════════════════════ */
-.nav-bar{
-  position:fixed;bottom:clamp(14px,2vw,26px);left:50%;transform:translateX(-50%);
-  display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:16px;
-  background:rgba(255,254,242,0.9);backdrop-filter:blur(16px);
-  border:1px solid rgba(134,53,233,0.15);
-  box-shadow:0 4px 24px rgba(134,53,233,0.1);
-  z-index:100;transition:opacity var(--transition-fast) ease;
-}
-.nav-btn{
-  width:38px;height:38px;border-radius:10px;
-  border:1px solid var(--border-color);background:transparent;
-  color:var(--text-secondary);font-size:16px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all var(--transition-fast) ease;
-}
-.nav-btn:hover{background:rgba(134,53,233,0.08);color:var(--primary);border-color:rgba(134,53,233,0.3)}
-.nav-btn:active{transform:scale(0.92)}
-.nav-btn:disabled{opacity:0.3;cursor:not-allowed}
-.nav-progress{display:flex;align-items:center;gap:4px}
-.nav-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--text-muted);opacity:0.3;
-  transition:all var(--transition-fast) ease;cursor:pointer;
-}
-.nav-dot.active{background:var(--primary);opacity:1;width:22px;border-radius:4px}
-.nav-dot:hover{opacity:0.6}
-.nav-counter{font-size:13px;font-weight:600;color:var(--text-muted);font-family:'Inter',monospace;min-width:48px;text-align:center}
+      .nav-bar {
+        position: fixed;
+        bottom: clamp(14px, 2vw, 26px);
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 16px;
+        border-radius: 16px;
+        background: rgba(255, 254, 242, 0.9);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(134, 53, 233, 0.15);
+        box-shadow: 0 4px 24px rgba(134, 53, 233, 0.1);
+        z-index: 100;
+        transition: opacity var(--transition-fast) ease;
+      }
+      .nav-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+        background: transparent;
+        color: var(--text-secondary);
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all var(--transition-fast) ease;
+      }
+      .nav-btn:hover {
+        background: rgba(134, 53, 233, 0.08);
+        color: var(--primary);
+        border-color: rgba(134, 53, 233, 0.3);
+      }
+      .nav-btn:active {
+        transform: scale(0.92);
+      }
+      .nav-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+      .nav-progress {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .nav-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--text-muted);
+        opacity: 0.3;
+        transition: all var(--transition-fast) ease;
+        cursor: pointer;
+      }
+      .nav-dot.active {
+        background: var(--primary);
+        opacity: 1;
+        width: 22px;
+        border-radius: 4px;
+      }
+      .nav-dot:hover {
+        opacity: 0.6;
+      }
+      .nav-counter {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-muted);
+        font-family: "Inter", monospace;
+        min-width: 48px;
+        text-align: center;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    PAGE DROPDOWN
 ═══════════════════════════════════ */
-.page-dropdown{
-  position:fixed;bottom:clamp(68px,8vw,90px);left:50%;
-  transform:translateX(-50%) translateY(10px);
-  background:rgba(255,254,242,0.97);backdrop-filter:blur(16px);
-  box-shadow:0 4px 24px rgba(134,53,233,0.12);
-  border:1px solid var(--border-color);border-radius:14px;padding:8px;
-  z-index:101;max-height:60vh;overflow-y:auto;min-width:280px;
-  opacity:0;visibility:hidden;transition:all var(--transition-fast) ease;
-}
-.page-dropdown.open{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
-.page-dropdown-item{
-  display:flex;align-items:center;gap:10px;padding:8px 14px;
-  border-radius:8px;cursor:pointer;font-size:clamp(13px,1.1vw,15px);
-  color:var(--text-secondary);transition:all var(--transition-fast) ease;
-}
-.page-dropdown-item:hover{background:var(--bg-card-hover);color:var(--text-primary)}
-.page-dropdown-item.active{background:rgba(134,53,233,0.08);color:var(--primary);font-weight:600}
-.page-dropdown-item .item-num{
-  font-weight:700;font-family:'Inter',monospace;font-size:11px;
-  min-width:24px;text-align:center;padding:2px 6px;
-  border-radius:6px;background:rgba(134,53,233,0.06);
-}
+      .page-dropdown {
+        position: fixed;
+        bottom: clamp(68px, 8vw, 90px);
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        background: rgba(255, 254, 242, 0.97);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 4px 24px rgba(134, 53, 233, 0.12);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        padding: 8px;
+        z-index: 101;
+        max-height: 60vh;
+        overflow-y: auto;
+        min-width: 280px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all var(--transition-fast) ease;
+      }
+      .page-dropdown.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+      }
+      .page-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: clamp(13px, 1.1vw, 15px);
+        color: var(--text-secondary);
+        transition: all var(--transition-fast) ease;
+      }
+      .page-dropdown-item:hover {
+        background: var(--bg-card-hover);
+        color: var(--text-primary);
+      }
+      .page-dropdown-item.active {
+        background: rgba(134, 53, 233, 0.08);
+        color: var(--primary);
+        font-weight: 600;
+      }
+      .page-dropdown-item .item-num {
+        font-weight: 700;
+        font-family: "Inter", monospace;
+        font-size: 11px;
+        min-width: 24px;
+        text-align: center;
+        padding: 2px 6px;
+        border-radius: 6px;
+        background: rgba(134, 53, 233, 0.06);
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    FULLSCREEN BUTTON
 ═══════════════════════════════════ */
-.fullscreen-btn{
-  position:fixed;top:16px;right:16px;z-index:100;
-  width:36px;height:36px;border-radius:8px;
-  border:1px solid var(--border-color);
-  background:rgba(255,254,242,0.85);backdrop-filter:blur(8px);
-  color:var(--text-muted);font-size:14px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all var(--transition-fast) ease;
-}
-.fullscreen-btn:hover{color:var(--primary);border-color:rgba(134,53,233,0.3)}
+      .fullscreen-btn {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 100;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background: rgba(255, 254, 242, 0.85);
+        backdrop-filter: blur(8px);
+        color: var(--text-muted);
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all var(--transition-fast) ease;
+      }
+      .fullscreen-btn:hover {
+        color: var(--primary);
+        border-color: rgba(134, 53, 233, 0.3);
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    LIGHTBOX
 ═══════════════════════════════════ */
-.lightbox-overlay{
-  position:fixed;inset:0;background:rgba(26,10,48,0.85);z-index:200;
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;visibility:hidden;transition:all 0.3s ease;cursor:zoom-out;
-}
-.lightbox-overlay.open{opacity:1;visibility:visible}
-.lightbox-overlay img{max-width:92vw;max-height:90vh;object-fit:contain;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,0.3)}
+      .lightbox-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 10, 48, 0.85);
+        z-index: 200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        cursor: zoom-out;
+      }
+      .lightbox-overlay.open {
+        opacity: 1;
+        visibility: visible;
+      }
+      .lightbox-overlay img {
+        max-width: 92vw;
+        max-height: 90vh;
+        object-fit: contain;
+        border-radius: 12px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    ANIMATIONS
 ═══════════════════════════════════ */
-@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.slide.active .anim-item{animation:fadeInUp 0.5s ease forwards;opacity:0}
-.slide.active .anim-item:nth-child(1){animation-delay:0.08s}
-.slide.active .anim-item:nth-child(2){animation-delay:0.18s}
-.slide.active .anim-item:nth-child(3){animation-delay:0.28s}
-.slide.active .anim-item:nth-child(4){animation-delay:0.38s}
-.slide.active .anim-item:nth-child(5){animation-delay:0.48s}
-.slide.active .anim-item:nth-child(6){animation-delay:0.58s}
-.slide.active .anim-item:nth-child(7){animation-delay:0.68s}
-.slide.active .anim-item:nth-child(8){animation-delay:0.78s}
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--text-muted);border-radius:4px}
+      @keyframes shimmer {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .slide.active .anim-item {
+        animation: fadeInUp 0.5s ease forwards;
+        opacity: 0;
+      }
+      .slide.active .anim-item:nth-child(1) {
+        animation-delay: 0.08s;
+      }
+      .slide.active .anim-item:nth-child(2) {
+        animation-delay: 0.18s;
+      }
+      .slide.active .anim-item:nth-child(3) {
+        animation-delay: 0.28s;
+      }
+      .slide.active .anim-item:nth-child(4) {
+        animation-delay: 0.38s;
+      }
+      .slide.active .anim-item:nth-child(5) {
+        animation-delay: 0.48s;
+      }
+      .slide.active .anim-item:nth-child(6) {
+        animation-delay: 0.58s;
+      }
+      .slide.active .anim-item:nth-child(7) {
+        animation-delay: 0.68s;
+      }
+      .slide.active .anim-item:nth-child(8) {
+        animation-delay: 0.78s;
+      }
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--text-muted);
+        border-radius: 4px;
+      }
 
-/* ═══════════════════════════════════
+      /* ═══════════════════════════════════
    MOBILE RESPONSIVE
 ═══════════════════════════════════ */
-@media (max-width: 768px) {
-  /* Allow slide content to scroll vertically */
-  body { overflow: hidden; }
-  .slide {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 20px 18px 90px;
-  }
-  .slide-content { overflow: visible; justify-content: flex-start; margin-top: 4px; }
+      @media (max-width: 768px) {
+        /* Allow slide content to scroll vertically */
+        body {
+          overflow: hidden;
+        }
+        .slide {
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          padding: 20px 18px 90px;
+        }
+        .slide-content {
+          overflow: visible;
+          justify-content: flex-start;
+          margin-top: 4px;
+        }
 
-  /* Heading block */
-  .slide-header { margin-bottom: 20px; }
-  .slide-title {
-    font-size: clamp(24px, 6vw, 40px);
-    margin-bottom: 6px;
-    line-height: 1.2;
-  }
-  .slide-subtitle {
-    font-size: clamp(13px, 3.5vw, 17px);
-    margin-bottom: 16px;
-    line-height: 1.6;
-  }
+        /* Heading block */
+        .slide-header {
+          margin-bottom: 20px;
+        }
+        .slide-title {
+          font-size: clamp(24px, 6vw, 40px);
+          margin-bottom: 6px;
+          line-height: 1.2;
+        }
+        .slide-subtitle {
+          font-size: clamp(13px, 3.5vw, 17px);
+          margin-bottom: 16px;
+          line-height: 1.6;
+        }
 
-  /* Cards grid → single column, gap เพิ่ม */
-  .cards-grid.cols-2,
-  .cards-grid.cols-3,
-  .cards-grid.cols-4 { grid-template-columns: 1fr; gap: 12px; }
+        /* Cards grid → single column, gap เพิ่ม */
+        .cards-grid.cols-2,
+        .cards-grid.cols-3,
+        .cards-grid.cols-4 {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
 
-  /* Card padding & spacing */
-  .card { padding: 16px 18px; border-radius: 16px; }
-  .card-icon { font-size: 28px; margin-bottom: 8px; }
-  .card-title { font-size: 16px; margin-bottom: 6px; }
-  .card-desc { font-size: 14px; line-height: 1.6; }
-  .card-tag { margin-top: 10px; }
+        /* Card padding & spacing */
+        .card {
+          padding: 16px 18px;
+          border-radius: 16px;
+        }
+        .card-icon {
+          font-size: 28px;
+          margin-bottom: 8px;
+        }
+        .card-title {
+          font-size: 16px;
+          margin-bottom: 6px;
+        }
+        .card-desc {
+          font-size: 14px;
+          line-height: 1.6;
+        }
+        .card-tag {
+          margin-top: 10px;
+        }
 
-  /* Tech stack: 2 columns */
-  .tech-cols { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .tc { padding: 14px; border-radius: 14px; }
-  .tc-t { margin-bottom: 10px; padding-bottom: 8px; font-size: 11px; }
-  .tg { font-size: 13px; padding: 5px 10px; }
+        /* Tech stack: 2 columns */
+        .tech-cols {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+        .tc {
+          padding: 14px;
+          border-radius: 14px;
+        }
+        .tc-t {
+          margin-bottom: 10px;
+          padding-bottom: 8px;
+          font-size: 11px;
+        }
+        .tg {
+          font-size: 13px;
+          padding: 5px 10px;
+        }
 
-  /* Two-col → stack */
-  .two-col { grid-template-columns: 1fr; gap: 20px; }
-  .col-section { gap: 10px; }
-  .section-label { margin-bottom: 8px; font-size: 13px; }
-  .bullet-list { gap: 10px; }
-  .bullet-list li { font-size: 14px; line-height: 1.6; }
+        /* Two-col → stack */
+        .two-col {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        .col-section {
+          gap: 10px;
+        }
+        .section-label {
+          margin-bottom: 8px;
+          font-size: 13px;
+        }
+        .bullet-list {
+          gap: 10px;
+        }
+        .bullet-list li {
+          font-size: 14px;
+          line-height: 1.6;
+        }
 
-  /* Track comparison → stack */
-  .track-grid { grid-template-columns: 1fr; gap: 14px; }
-  .track-card { padding: 18px; border-radius: 16px; }
-  .track-head { font-size: 20px; margin-bottom: 4px; }
-  .track-dur { margin-bottom: 14px; }
-  .track-item { font-size: 14px; padding: 9px 0; }
+        /* Track comparison → stack */
+        .track-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .track-card {
+          padding: 18px;
+          border-radius: 16px;
+        }
+        .track-head {
+          font-size: 20px;
+          margin-bottom: 4px;
+        }
+        .track-dur {
+          margin-bottom: 14px;
+        }
+        .track-item {
+          font-size: 14px;
+          padding: 9px 0;
+        }
 
-  /* Mini cards → full width, gap เพิ่ม */
-  .split-row { flex-direction: column; gap: 12px; }
-  .mini-card { min-width: 100%; max-width: 100%; padding: 16px 18px; border-radius: 14px; }
-  .mini-card-title { font-size: 15px; margin-bottom: 10px; }
-  .mini-card ul { gap: 8px; }
-  .mini-card ul li { font-size: 14px; line-height: 1.55; }
+        /* Mini cards → full width, gap เพิ่ม */
+        .split-row {
+          flex-direction: column;
+          gap: 12px;
+        }
+        .mini-card {
+          min-width: 100%;
+          max-width: 100%;
+          padding: 16px 18px;
+          border-radius: 14px;
+        }
+        .mini-card-title {
+          font-size: 15px;
+          margin-bottom: 10px;
+        }
+        .mini-card ul {
+          gap: 8px;
+        }
+        .mini-card ul li {
+          font-size: 14px;
+          line-height: 1.55;
+        }
 
-  /* Photo grid → single column */
-  .photo-grid { grid-template-columns: 1fr; gap: 12px; }
-  .photo-item { border-radius: 16px; }
+        /* Photo grid → single column */
+        .photo-grid {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        .photo-item {
+          border-radius: 16px;
+        }
 
-  /* Team grids → 2 columns */
-  .team-grid-4 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .team-grid-3 { grid-template-columns: repeat(2, 1fr); max-width: 100%; gap: 12px; }
-  .team-card { padding: 16px 12px; gap: 7px; border-radius: 16px; }
-  .team-card img { width: 72px; height: 72px; border-width: 3px; }
-  .team-card.mentor img { width: 82px; height: 82px; }
-  .team-name { font-size: 14px; }
-  .team-role { font-size: 11px; }
-  .team-tag { font-size: 10px; padding: 2px 7px; }
+        /* Team grids → 2 columns */
+        .team-grid-4 {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+        .team-grid-3 {
+          grid-template-columns: repeat(2, 1fr);
+          max-width: 100%;
+          gap: 12px;
+        }
+        .team-card {
+          padding: 16px 12px;
+          gap: 7px;
+          border-radius: 16px;
+        }
+        .team-card img {
+          width: 72px;
+          height: 72px;
+          border-width: 3px;
+        }
+        .team-card.mentor img {
+          width: 82px;
+          height: 82px;
+        }
+        .team-name {
+          font-size: 14px;
+        }
+        .team-role {
+          font-size: 11px;
+        }
+        .team-tag {
+          font-size: 10px;
+          padding: 2px 7px;
+        }
 
-  /* Flow: stack steps vertically */
-  .flow-container { gap: 12px; }
-  .flow-row { flex-direction: column; align-items: stretch; gap: 8px; }
-  .flow-arrow { display: none; }
-  .flow-step {
-    white-space: normal;
-    justify-content: flex-start;
-    font-size: 14px;
-    padding: 12px 14px;
-    border-radius: 12px;
-  }
-  .flow-step .icon { font-size: 16px; }
+        /* Flow: stack steps vertically */
+        .flow-container {
+          gap: 12px;
+        }
+        .flow-row {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+        .flow-arrow {
+          display: none;
+        }
+        .flow-step {
+          white-space: normal;
+          justify-content: flex-start;
+          font-size: 14px;
+          padding: 12px 14px;
+          border-radius: 12px;
+        }
+        .flow-step .icon {
+          font-size: 16px;
+        }
 
-  /* Nav bar — compact */
-  .nav-bar { padding: 6px 10px; gap: 6px; bottom: 10px; }
-  .nav-btn { width: 32px; height: 32px; font-size: 14px; }
-  .nav-counter { font-size: 11px; min-width: 36px; }
-  .nav-dot { width: 6px; height: 6px; }
-  .nav-dot.active { width: 16px; }
+        /* Nav bar — compact */
+        .nav-bar {
+          padding: 6px 10px;
+          gap: 6px;
+          bottom: 10px;
+        }
+        .nav-btn {
+          width: 32px;
+          height: 32px;
+          font-size: 14px;
+        }
+        .nav-counter {
+          font-size: 11px;
+          min-width: 36px;
+        }
+        .nav-dot {
+          width: 6px;
+          height: 6px;
+        }
+        .nav-dot.active {
+          width: 16px;
+        }
 
-  /* Cover */
-  .cover-logo-img { max-height: 52px; }
-  .cover-roles { gap: 8px; margin-top: 4px; }
-  .role-chip { font-size: 13px; padding: 8px 16px; }
+        /* Cover */
+        .cover-logo-img {
+          max-height: 52px;
+        }
+        .cover-roles {
+          gap: 8px;
+          margin-top: 4px;
+        }
+        .role-chip {
+          font-size: 13px;
+          padding: 8px 16px;
+        }
 
-  /* Fullscreen button */
-  .fullscreen-btn { top: 10px; right: 10px; }
+        /* Fullscreen button */
+        .fullscreen-btn {
+          top: 10px;
+          right: 10px;
+        }
 
-  /* Page dropdown */
-  .page-dropdown { min-width: 240px; max-height: 50vh; }
-}
+        /* Page dropdown */
+        .page-dropdown {
+          min-width: 240px;
+          max-height: 50vh;
+        }
+      }
 
-@media (max-width: 480px) {
-  .tech-cols { grid-template-columns: 1fr; }
-  .team-grid-4,
-  .team-grid-3 { grid-template-columns: repeat(2, 1fr); }
-  .slide { padding: 16px 16px 84px; }
-}
-</style>
-</head>
-<body>
+      @media (max-width: 480px) {
+        .tech-cols {
+          grid-template-columns: 1fr;
+        }
+        .team-grid-4,
+        .team-grid-3 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .slide {
+          padding: 16px 16px 84px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid-bg"></div>
 
-<div class="grid-bg"></div>
-
-<div class="presentation" id="presentation">
-
-<!-- ═══════════════════════════════════════
+    <div class="presentation" id="presentation">
+      <!-- ═══════════════════════════════════════
      SLIDE 0 — COVER
 ═══════════════════════════════════════ -->
-<div class="slide active" data-slide="0">
-  <div class="slide-content cover-content">
-    <img src="image/logo/1.png" alt="DevNest" class="cover-logo-img anim-item">
-    <div class="cover-title anim-item">Advanced Fullstack Bootcamp</div>
-    <div class="cover-subtitle anim-item">เรียน Onsite เข้มข้น 4.5 เดือน — จาก Zero สู่ Full-Stack Developer พร้อมทำงานจริง 🚀</div>
-    <div class="cover-roles">
-      <div class="role-chip anim-item" style="border-color:rgba(134,53,233,0.3);color:var(--primary)">📚 98 Classes</div>
-      <div class="role-chip anim-item" style="border-color:rgba(212,162,0,0.35);color:#8A6000;background:rgba(255,243,95,0.2)">⏱ 4.5 เดือน</div>
-      <div class="role-chip anim-item" style="border-color:rgba(134,53,233,0.25);color:var(--primary-dark)">🛤 2 Tracks</div>
-      <div class="role-chip anim-item" style="border-color:rgba(14,124,94,0.3);color:#0E7C5E">👨‍🏫 7+ Instructors</div>
-    </div>
-  </div>
-</div>
+      <div class="slide active" data-slide="0">
+        <div class="slide-content cover-content">
+          <img
+            src="image/logo/1.png"
+            alt="DevNest"
+            class="cover-logo-img anim-item"
+          />
+          <div class="cover-title anim-item">Advanced Fullstack Bootcamp</div>
+          <div class="cover-subtitle anim-item">
+            เรียน Onsite เข้มข้น 4.5 เดือน — จาก Zero สู่ Full-Stack Developer
+            พร้อมทำงานจริง 🚀
+          </div>
+          <div class="cover-roles">
+            <div
+              class="role-chip anim-item"
+              style="
+                border-color: rgba(134, 53, 233, 0.3);
+                color: var(--primary);
+              "
+            >
+              📚 98 Classes
+            </div>
+            <div
+              class="role-chip anim-item"
+              style="
+                border-color: rgba(212, 162, 0, 0.35);
+                color: #8a6000;
+                background: rgba(255, 243, 95, 0.2);
+              "
+            >
+              ⏱ 4.5 เดือน
+            </div>
+            <div
+              class="role-chip anim-item"
+              style="
+                border-color: rgba(134, 53, 233, 0.25);
+                color: var(--primary-dark);
+              "
+            >
+              🛤 2 Tracks
+            </div>
+            <div
+              class="role-chip anim-item"
+              style="border-color: rgba(14, 124, 94, 0.3); color: #0e7c5e"
+            >
+              👨‍🏫 7+ Instructors
+            </div>
+          </div>
+        </div>
+      </div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 1 — 2 TRACKS
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="1">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Tracks</div>
-    <div class="slide-number">01 / 18</div>
-  </div>
-  <div class="slide-title">2 เส้นทาง สู่ Full-Stack Developer</div>
-  <div class="slide-subtitle">เลือก track ที่ใช่ — ทั้งสองเส้นทางพาคุณไปถึงเป้าหมายเดียวกัน 🎯</div>
-  <div class="slide-content">
-    <div class="track-grid">
-      <div class="track-card track-adv anim-item">
-        <div class="badge badge-purple" style="margin-bottom:14px">🏫 Onsite</div>
-        <div class="track-head">Advanced Fullstack Bootcamp</div>
-        <div class="track-dur">📅 4.5 เดือน • เรียน Onsite</div>
-        <div class="track-item"><span class="ico iy">✓</span> HTML, CSS, JavaScript, TypeScript</div>
-        <div class="track-item"><span class="ico iy">✓</span> React + State Management</div>
-        <div class="track-item"><span class="ico iy">✓</span> Node.js, Express, PostgreSQL</div>
-        <div class="track-item"><span class="ico iy">✓</span> <strong>Next.js</strong></div>
-        <div class="track-item"><span class="ico iy">✓</span> <strong>NestJS</strong></div>
-        <div class="track-item"><span class="ico iy">✓</span> <strong>Group Project + AI Tools for Devs</strong></div>
-        <div class="track-item"><span class="ico iy">✓</span> Personal Project + Demo Day</div>
+      <div class="slide" data-slide="1">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Tracks</div>
+          <div class="slide-number">01 / 18</div>
+        </div>
+        <div class="slide-title">2 เส้นทาง สู่ Full-Stack Developer</div>
+        <div class="slide-subtitle">
+          เลือก track ที่ใช่ — ทั้งสองเส้นทางพาคุณไปถึงเป้าหมายเดียวกัน 🎯
+        </div>
+        <div class="slide-content">
+          <div class="track-grid">
+            <div class="track-card track-adv anim-item">
+              <div class="badge badge-purple" style="margin-bottom: 14px">
+                🏫 Onsite
+              </div>
+              <div class="track-head">Advanced Fullstack Bootcamp</div>
+              <div class="track-dur">📅 4.5 เดือน • เรียน Onsite</div>
+              <div class="track-item">
+                <span class="ico iy">✓</span> HTML, CSS, JavaScript, TypeScript
+              </div>
+              <div class="track-item">
+                <span class="ico iy">✓</span> React + State Management
+              </div>
+              <div class="track-item">
+                <span class="ico iy">✓</span> Node.js, Express, PostgreSQL
+              </div>
+              <div class="track-item">
+                <span class="ico iy">✓</span> <strong>Next.js</strong>
+              </div>
+              <div class="track-item">
+                <span class="ico iy">✓</span> <strong>NestJS</strong>
+              </div>
+              <div class="track-item">
+                <span class="ico iy">✓</span>
+                <strong>Group Project + AI Tools for Devs</strong>
+              </div>
+              <div class="track-item">
+                <span class="ico iy">✓</span> Personal Project + Demo Day
+              </div>
+            </div>
+            <div class="track-card track-onl anim-item">
+              <div class="badge badge-yellow" style="margin-bottom: 14px">
+                💻 Online
+              </div>
+              <div class="track-head">Fullstack Online</div>
+              <div class="track-dur">📅 เรียน Online</div>
+              <div class="track-item">
+                <span class="ico iy">✓</span> HTML, CSS, JavaScript, TypeScript
+              </div>
+              <div class="track-item">
+                <span class="ico iy">✓</span> React + State Management
+              </div>
+              <div class="track-item">
+                <span class="ico iy">✓</span> Node.js, Express, PostgreSQL
+              </div>
+              <div class="track-item x">
+                <span class="ico in">×</span> Next.js
+              </div>
+              <div class="track-item x">
+                <span class="ico in">×</span> NestJS
+              </div>
+              <div class="track-item x">
+                <span class="ico in">×</span> Group Project + AI
+              </div>
+              <div class="track-item">
+                <span class="ico iy">✓</span> Personal Project
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="track-card track-onl anim-item">
-        <div class="badge badge-yellow" style="margin-bottom:14px">💻 Online</div>
-        <div class="track-head">Fullstack Online</div>
-        <div class="track-dur">📅 เรียน Online</div>
-        <div class="track-item"><span class="ico iy">✓</span> HTML, CSS, JavaScript, TypeScript</div>
-        <div class="track-item"><span class="ico iy">✓</span> React + State Management</div>
-        <div class="track-item"><span class="ico iy">✓</span> Node.js, Express, PostgreSQL</div>
-        <div class="track-item x"><span class="ico in">×</span> Next.js</div>
-        <div class="track-item x"><span class="ico in">×</span> NestJS</div>
-        <div class="track-item x"><span class="ico in">×</span> Group Project + AI</div>
-        <div class="track-item"><span class="ico iy">✓</span> Personal Project</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 2 — TECH STACK
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="2">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Tech Stack</div>
-    <div class="slide-number">02 / 18</div>
-  </div>
-  <div class="slide-title">สิ่งที่คุณจะได้เรียน</div>
-  <div class="slide-subtitle">Tech stack ครบจบในที่เดียว — Frontend ถึง Backend, Database, AI Tools และอีกมากกว่านั้น 💪</div>
-  <div class="slide-content">
-    <div class="tech-cols">
-      <div class="tc anim-item">
-        <div class="tc-t">🎨 Frontend</div>
-        <div class="tc-tags">
-          <span class="tg">HTML</span><span class="tg">CSS</span><span class="tg">Tailwind</span>
-          <span class="tg">JavaScript</span><span class="tg">TypeScript</span>
-          <span class="tg">React</span><span class="tg hl">Next.js</span>
-          <span class="tg hl">shadcn/ui</span>
+      <div class="slide" data-slide="2">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Tech Stack</div>
+          <div class="slide-number">02 / 18</div>
+        </div>
+        <div class="slide-title">สิ่งที่คุณจะได้เรียน</div>
+        <div class="slide-subtitle">
+          Tech stack ครบจบในที่เดียว — Frontend ถึง Backend, Database, AI Tools
+          และอีกมากกว่านั้น 💪
+        </div>
+        <div class="slide-content">
+          <div class="tech-cols">
+            <div class="tc anim-item">
+              <div class="tc-t">🎨 Frontend</div>
+              <div class="tc-tags">
+                <span class="tg">HTML</span><span class="tg">CSS</span
+                ><span class="tg">Tailwind</span>
+                <span class="tg">JavaScript</span
+                ><span class="tg">TypeScript</span> <span class="tg">React</span
+                ><span class="tg hl">Next.js</span>
+                <span class="tg hl">shadcn/ui</span>
+              </div>
+            </div>
+            <div class="tc anim-item">
+              <div class="tc-t">⚙️ Backend</div>
+              <div class="tc-tags">
+                <span class="tg">Node.js</span><span class="tg">Express</span>
+                <span class="tg hl">NestJS</span
+                ><span class="tg">Prisma ORM</span>
+                <span class="tg">REST API</span><span class="tg">JWT Auth</span
+                ><span class="tg">Mongoose</span>
+              </div>
+            </div>
+            <div class="tc anim-item">
+              <div class="tc-t">🗄️ Database</div>
+              <div class="tc-tags">
+                <span class="tg">PostgreSQL</span
+                ><span class="tg">MongoDB</span>
+                <span class="tg">SQL</span>
+              </div>
+            </div>
+            <div class="tc anim-item">
+              <div class="tc-t">🛠️ Tools & AI</div>
+              <div class="tc-tags">
+                <span class="tg">Git</span><span class="tg">Docker</span>
+                <span class="tg hl">n8n AI</span>
+                <span class="tg hl">Claude Code</span>
+                <span class="tg hl">Codex</span>
+                <span class="tg">UX/UI</span>
+                <span class="tg">Agile/PM</span><span class="tg">Figma</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="tc anim-item">
-        <div class="tc-t">⚙️ Backend</div>
-        <div class="tc-tags">
-          <span class="tg">Node.js</span><span class="tg">Express</span>
-          <span class="tg hl">NestJS</span><span class="tg">Prisma ORM</span>
-          <span class="tg">REST API</span><span class="tg">JWT Auth</span><span class="tg">Mongoose</span>
-        </div>
-      </div>
-      <div class="tc anim-item">
-        <div class="tc-t">🗄️ Database</div>
-        <div class="tc-tags">
-          <span class="tg">PostgreSQL</span><span class="tg">MongoDB</span>
-          <span class="tg">SQL</span>
-        </div>
-      </div>
-      <div class="tc anim-item">
-        <div class="tc-t">🛠️ Tools & AI</div>
-        <div class="tc-tags">
-          <span class="tg">Git</span><span class="tg">Docker</span>
-          <span class="tg hl">n8n AI</span>
-          <span class="tg hl">Claude Code</span>
-          <span class="tg hl">Codex</span>
-          <span class="tg">UX/UI</span>
-          <span class="tg">Agile/PM</span><span class="tg">Figma</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 3 — PHASE 1: WEB FOUNDATIONS
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="3">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Phase 1</div>
-    <div class="slide-number">03 / 18</div>
-  </div>
-  <div class="slide-title">Web Foundations</div>
-  <div class="slide-subtitle">Class 1–6 &nbsp;·&nbsp; อาจารย์นนท์ &nbsp;·&nbsp; ลงมือสร้างเว็บตั้งแต่วันแรก! HTML, CSS, Tailwind และ Git ครบในเฟสเดียว ⚡</div>
-  <div class="slide-content">
-    <div class="flow-container">
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-blue"><span class="icon">🌐</span> HTML — Structure & Semantics</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-blue"><span class="icon">🎨</span> CSS Basics — Selector, Box Model, Position</div>
+      <div class="slide" data-slide="3">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Phase 1</div>
+          <div class="slide-number">03 / 18</div>
+        </div>
+        <div class="slide-title">Web Foundations</div>
+        <div class="slide-subtitle">
+          Class 1–6 &nbsp;·&nbsp; อาจารย์นนท์ &nbsp;·&nbsp;
+          ลงมือสร้างเว็บตั้งแต่วันแรก! HTML, CSS, Tailwind และ Git ครบในเฟสเดียว
+          ⚡
+        </div>
+        <div class="slide-content">
+          <div class="flow-container">
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-blue">
+                <span class="icon">🌐</span> HTML — Structure & Semantics
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-blue">
+                <span class="icon">🎨</span> CSS Basics — Selector, Box Model,
+                Position
+              </div>
+            </div>
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-purple">
+                <span class="icon">📐</span> CSS Layout — Flexbox & Grid
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-purple">
+                <span class="icon">✨</span> CSS Advanced — Animation &
+                Responsive
+              </div>
+            </div>
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-yellow">
+                <span class="icon">🍃</span> Tailwind CSS — Utility-first
+                Framework
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-green">
+                <span class="icon">🌿</span> Git — Version Control & Basic
+                Commands
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-purple"><span class="icon">📐</span> CSS Layout — Flexbox & Grid</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-purple"><span class="icon">✨</span> CSS Advanced — Animation & Responsive</div>
-      </div>
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-yellow"><span class="icon">🍃</span> Tailwind CSS — Utility-first Framework</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-green"><span class="icon">🌿</span> Git — Version Control & Basic Commands</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 4 — PHASE 2: JAVASCRIPT
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="4">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Phase 2</div>
-    <div class="slide-number">04 / 18</div>
-  </div>
-  <div class="slide-title">JavaScript Deep Dive</div>
-  <div class="slide-subtitle">Class 7–15 &nbsp;·&nbsp; อาจารย์เอิร์ธ &nbsp;·&nbsp; เจาะลึก JavaScript ทุก concept — ตั้งแต่พื้นฐานจนถึง Async/Await และ Fetch API 🔥</div>
-  <div class="slide-content">
-    <div class="split-row">
-      <div class="mini-card anim-item">
-        <div class="mini-card-title">🧱 Basics</div>
-        <ul>
-          <li>Variables, Data Types, Operators</li>
-          <li>Conditions & Loops</li>
-          <li>Functions & Arrow Functions</li>
-          <li>Objects & Object Methods</li>
-        </ul>
+      <div class="slide" data-slide="4">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Phase 2</div>
+          <div class="slide-number">04 / 18</div>
+        </div>
+        <div class="slide-title">JavaScript Deep Dive</div>
+        <div class="slide-subtitle">
+          Class 7–15 &nbsp;·&nbsp; อาจารย์เอิร์ธ &nbsp;·&nbsp; เจาะลึก
+          JavaScript ทุก concept — ตั้งแต่พื้นฐานจนถึง Async/Await และ Fetch API
+          🔥
+        </div>
+        <div class="slide-content">
+          <div class="split-row">
+            <div class="mini-card anim-item">
+              <div class="mini-card-title">🧱 Basics</div>
+              <ul>
+                <li>Variables, Data Types, Operators</li>
+                <li>Conditions & Loops</li>
+                <li>Functions & Arrow Functions</li>
+                <li>Objects & Object Methods</li>
+              </ul>
+            </div>
+            <div class="mini-card anim-item">
+              <div class="mini-card-title">🔧 Arrays & Methods</div>
+              <ul>
+                <li>Array Operations & Looping</li>
+                <li>for-of, Map, Filter, Reduce</li>
+                <li>String & Date Methods</li>
+                <li>Maps, Sets, JSON, Error Handling</li>
+              </ul>
+            </div>
+            <div class="mini-card anim-item">
+              <div class="mini-card-title">⚡ Modern JS & Async</div>
+              <ul>
+                <li>Destructuring, Spread, Rest</li>
+                <li>Prototype & Modules</li>
+                <li>DOM & Events (BOM, Bubbling)</li>
+                <li>Callback, Promise, Async/Await, Fetch</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mini-card anim-item">
-        <div class="mini-card-title">🔧 Arrays & Methods</div>
-        <ul>
-          <li>Array Operations & Looping</li>
-          <li>for-of, Map, Filter, Reduce</li>
-          <li>String & Date Methods</li>
-          <li>Maps, Sets, JSON, Error Handling</li>
-        </ul>
-      </div>
-      <div class="mini-card anim-item">
-        <div class="mini-card-title">⚡ Modern JS & Async</div>
-        <ul>
-          <li>Destructuring, Spread, Rest</li>
-          <li>Prototype & Modules</li>
-          <li>DOM & Events (BOM, Bubbling)</li>
-          <li>Callback, Promise, Async/Await, Fetch</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 5 — PHASE 3: BACKEND
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="5">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Phase 3</div>
-    <div class="slide-number">05 / 18</div>
-  </div>
-  <div class="slide-title">Backend Fundamentals</div>
-  <div class="slide-subtitle">Class 16–21 &nbsp;·&nbsp; อาจารย์เอิร์ธ &nbsp;·&nbsp; สร้าง API จริงด้วย Node.js + Express — เชื่อมต่อทั้ง PostgreSQL (SQL) และ MongoDB (NoSQL) 🗄️</div>
-  <div class="slide-content">
-    <div class="flow-container">
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-green"><span class="icon">🟢</span> Node.js — Modules & NPM</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-green"><span class="icon">🚂</span> Express — Routing & Middleware</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-green"><span class="icon">🖼</span> MVC Pattern</div>
+      <div class="slide" data-slide="5">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Phase 3</div>
+          <div class="slide-number">05 / 18</div>
+        </div>
+        <div class="slide-title">Backend Fundamentals</div>
+        <div class="slide-subtitle">
+          Class 16–21 &nbsp;·&nbsp; อาจารย์เอิร์ธ &nbsp;·&nbsp; สร้าง API
+          จริงด้วย Node.js + Express — เชื่อมต่อทั้ง PostgreSQL (SQL) และ
+          MongoDB (NoSQL) 🗄️
+        </div>
+        <div class="slide-content">
+          <div class="flow-container">
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-green">
+                <span class="icon">🟢</span> Node.js — Modules & NPM
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-green">
+                <span class="icon">🚂</span> Express — Routing & Middleware
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-green">
+                <span class="icon">🖼</span> MVC & Hexagonal Pattern
+              </div>
+            </div>
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-blue">
+                <span class="icon">🐘</span> PostgreSQL — Data Types & CRUD
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-blue">
+                <span class="icon">🔗</span> Joins, Grouping & DB Design
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-purple">
+                <span class="icon">🔮</span> Prisma ORM
+              </div>
+            </div>
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-orange">
+                <span class="icon">🍃</span> MongoDB — Document-based NoSQL
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-orange">
+                <span class="icon">🦴</span> Mongoose ODM — Schema, Models &
+                Validation
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-green">
+                <span class="icon">🔗</span> REST API with PostgreSQL MongoDB
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-blue"><span class="icon">🐘</span> PostgreSQL — Data Types & CRUD</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-blue"><span class="icon">🔗</span> Joins, Grouping & DB Design</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-purple"><span class="icon">🔮</span> Prisma ORM</div>
-      </div>
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-orange"><span class="icon">🍃</span> MongoDB — Document-based NoSQL</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-orange"><span class="icon">🦴</span> Mongoose ODM — Schema, Models & Validation</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-green"><span class="icon">🔗</span> REST API with MongoDB</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 6 — PHASE 4: TYPESCRIPT & AUTH
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="6">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Phase 4</div>
-    <div class="slide-number">06 / 18</div>
-  </div>
-  <div class="slide-title">TypeScript & Security</div>
-  <div class="slide-subtitle">Class 22–30 &nbsp;·&nbsp; อาจารย์เอิร์ธ &nbsp;·&nbsp; เขียนโค้ดแบบ Pro ด้วย TypeScript + ระบบ Auth ที่ปลอดภัยระดับ Production 🔐</div>
-  <div class="slide-content">
-    <div class="cards-grid cols-3" style="margin-top:8px">
-      <div class="card anim-item">
-        <div class="card-icon">🔷</div>
-        <div class="card-title">TypeScript Basics</div>
-        <div class="card-desc">Types, Inference, Aliases, Arrays, Tuples, Assertions, Enums</div>
-        <div class="card-tag tag-blue">TS Basics</div>
+      <div class="slide" data-slide="6">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Phase 4</div>
+          <div class="slide-number">06 / 18</div>
+        </div>
+        <div class="slide-title">TypeScript & Security</div>
+        <div class="slide-subtitle">
+          Class 22–30 &nbsp;·&nbsp; อาจารย์เอิร์ธ &nbsp;·&nbsp; เขียนโค้ดแบบ Pro
+          ด้วย TypeScript + ระบบ Auth ที่ปลอดภัยระดับ Production 🔐
+        </div>
+        <div class="slide-content">
+          <div class="cards-grid cols-3" style="margin-top: 8px">
+            <div class="card anim-item">
+              <div class="card-icon">🔷</div>
+              <div class="card-title">TypeScript Basics</div>
+              <div class="card-desc">
+                Types, Inference, Aliases, Arrays, Tuples, Assertions, Enums
+              </div>
+              <div class="card-tag tag-blue">TS Basics</div>
+            </div>
+            <div class="card anim-item">
+              <div class="card-icon">🏛</div>
+              <div class="card-title">OOP & Advanced Types</div>
+              <div class="card-desc">
+                Union, Literal, Unknown, Never, Type Guards, Classes,
+                Interfaces, Generics, Decorators
+              </div>
+              <div class="card-tag tag-purple">OOP</div>
+            </div>
+            <div class="card anim-item">
+              <div class="card-icon">🔐</div>
+              <div class="card-title">Authentication & Security</div>
+              <div class="card-desc">
+                Cryptography, Symmetric/Asymmetric Encryption, Hash Functions,
+                JWT Auth
+              </div>
+              <div class="card-tag tag-red">Security</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card anim-item">
-        <div class="card-icon">🏛</div>
-        <div class="card-title">OOP & Advanced Types</div>
-        <div class="card-desc">Union, Literal, Unknown, Never, Type Guards, Classes, Interfaces, Generics, Decorators</div>
-        <div class="card-tag tag-purple">OOP</div>
-      </div>
-      <div class="card anim-item">
-        <div class="card-icon">🔐</div>
-        <div class="card-title">Authentication & Security</div>
-        <div class="card-desc">Cryptography, Symmetric/Asymmetric Encryption, Hash Functions, JWT Auth</div>
-        <div class="card-tag tag-red">Security</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 7 — PHASE 5: REACT & UI/UX
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="7">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Phase 5</div>
-    <div class="slide-number">07 / 18</div>
-  </div>
-  <div class="slide-title">React & UI/UX</div>
-  <div class="slide-subtitle">Class 31–44 &nbsp;·&nbsp; อาจารย์เอิร์ธ, นนท์, ซูพรีม &nbsp;·&nbsp; สร้าง UI สวยด้วย React เชื่อม Backend และเรียนรู้ UX/UI ที่ใช้งานได้จริง ✨</div>
-  <div class="slide-content">
-    <div class="split-row">
-      <div class="mini-card anim-item">
-        <div class="mini-card-title">⚛️ React Core</div>
-        <ul>
-          <li>Components, JSX, Props</li>
-          <li>State, Forms, Event Handling</li>
-          <li>Lists & Conditional Rendering</li>
-        </ul>
+      <div class="slide" data-slide="7">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Phase 5</div>
+          <div class="slide-number">07 / 18</div>
+        </div>
+        <div class="slide-title">React & UI/UX</div>
+        <div class="slide-subtitle">
+          Class 31–44 &nbsp;·&nbsp; อาจารย์เอิร์ธ, นนท์, ซูพรีม &nbsp;·&nbsp;
+          สร้าง UI สวยด้วย React เชื่อม Backend และเรียนรู้ UX/UI
+          ที่ใช้งานได้จริง ✨
+        </div>
+        <div class="slide-content">
+          <div class="split-row">
+            <div class="mini-card anim-item">
+              <div class="mini-card-title">⚛️ React Core</div>
+              <ul>
+                <li>Components, JSX, Props</li>
+                <li>State, Forms, Event Handling</li>
+                <li>Lists & Conditional Rendering</li>
+              </ul>
+            </div>
+            <div class="mini-card anim-item">
+              <div class="mini-card-title">🔁 React Advanced</div>
+              <ul>
+                <li>Reducer, Context API</li>
+                <li>Effects, Life-cycle, Refs</li>
+                <li>Custom Hooks</li>
+                <li>Router + Zustand (Global State)</li>
+              </ul>
+            </div>
+            <div class="mini-card anim-item">
+              <div class="mini-card-title">🔌 Fullstack + UX/UI</div>
+              <ul>
+                <li>Connecting React ↔ Express API</li>
+                <li>UX/UI Design Principles</li>
+                <li>Figma & Prototyping</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mini-card anim-item">
-        <div class="mini-card-title">🔁 React Advanced</div>
-        <ul>
-          <li>Reducer, Context API</li>
-          <li>Effects, Life-cycle, Refs</li>
-          <li>Custom Hooks</li>
-          <li>Router + Zustand (Global State)</li>
-        </ul>
-      </div>
-      <div class="mini-card anim-item">
-        <div class="mini-card-title">🔌 Fullstack + UX/UI</div>
-        <ul>
-          <li>Connecting React ↔ Express API</li>
-          <li>UX/UI Design Principles</li>
-          <li>Figma & Prototyping</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 8 — PHASE 6: ADVANCED STACK
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="8">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Phase 6</div>
-    <div class="slide-number">08 / 18</div>
-  </div>
-  <div class="slide-title">Advanced Stack <span class="hl-star">⭐ Advanced Track</span></div>
-  <div class="slide-subtitle">Class 45–55 &nbsp;·&nbsp; อาจารย์เอิร์ธ &nbsp;·&nbsp; ยกระดับสู่ Framework ระดับ Enterprise — Next.js + NestJS คู่ที่ตลาดงานต้องการ 🏆</div>
-  <div class="slide-content">
-    <div class="two-col">
-      <div class="col-section anim-item">
-        <div class="section-label">▲ Next.js</div>
-        <ul class="bullet-list">
-          <li><span class="bullet"></span>File-based Routing, Pages & Layouts, Nested Routes</li>
-          <li><span class="bullet"></span>SSR vs CSR, Server & Client Components</li>
-          <li><span class="bullet"></span>Data Fetching, Caching, Error Handling, Loading UI</li>
-          <li><span class="bullet"></span>Server Actions, Route Handlers, Middleware</li>
-          <li><span class="bullet"></span>Next Auth — Authentication</li>
-        </ul>
+      <div class="slide" data-slide="8">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Phase 6</div>
+          <div class="slide-number">08 / 18</div>
+        </div>
+        <div class="slide-title">
+          Advanced Stack <span class="hl-star">⭐ Advanced Track</span>
+        </div>
+        <div class="slide-subtitle">
+          Class 45–55 &nbsp;·&nbsp; อาจารย์เอิร์ธ &nbsp;·&nbsp; ยกระดับสู่
+          Framework ระดับ Enterprise — Next.js + NestJS คู่ที่ตลาดงานต้องการ 🏆
+        </div>
+        <div class="slide-content">
+          <div class="two-col">
+            <div class="col-section anim-item">
+              <div class="section-label">▲ Next.js</div>
+              <ul class="bullet-list">
+                <li>
+                  <span class="bullet"></span>File-based Routing, Pages &
+                  Layouts, Nested Routes
+                </li>
+                <li>
+                  <span class="bullet"></span>SSR vs CSR, Server & Client
+                  Components
+                </li>
+                <li>
+                  <span class="bullet"></span>Data Fetching, Caching, Error
+                  Handling, Loading UI
+                </li>
+                <li>
+                  <span class="bullet"></span>Server Actions, Route Handlers,
+                  Middleware
+                </li>
+                <li><span class="bullet"></span>Next Auth — Authentication</li>
+              </ul>
+            </div>
+            <div class="col-section anim-item">
+              <div class="section-label">🐱 NestJS</div>
+              <ul class="bullet-list">
+                <li>
+                  <span class="bullet"></span>Modules, Controllers, Routing
+                  Decorators
+                </li>
+                <li><span class="bullet"></span>Validation, Pipes & DTO</li>
+                <li>
+                  <span class="bullet"></span>DI/IoC, Services & Repository
+                  Pattern
+                </li>
+                <li>
+                  <span class="bullet"></span>Guards, Custom Decorators,
+                  Interceptors
+                </li>
+                <li>
+                  <span class="bullet"></span>PostgreSQL Integration & Swagger
+                  Docs
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col-section anim-item">
-        <div class="section-label">🐱 NestJS</div>
-        <ul class="bullet-list">
-          <li><span class="bullet"></span>Modules, Controllers, Routing Decorators</li>
-          <li><span class="bullet"></span>Validation, Pipes & DTO</li>
-          <li><span class="bullet"></span>DI/IoC, Services & Repository Pattern</li>
-          <li><span class="bullet"></span>Guards, Custom Decorators, Interceptors</li>
-          <li><span class="bullet"></span>PostgreSQL Integration & Swagger Docs</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 9 — PHASE 7: PROJECTS & WORKSHOP
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="9">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Phase 7</div>
-    <div class="slide-number">09 / 18</div>
-  </div>
-  <div class="slide-title">Projects & Workshop</div>
-  <div class="slide-subtitle">Class 56–75 &nbsp;·&nbsp; อาจารย์เอิร์ธ, ซูพรีม, นนท์ &nbsp;·&nbsp; ถึงเวลาลงมือทำ! Workshop, Personal Project จริง และ Git workflow ระดับทีม 💼</div>
-  <div class="slide-content">
-    <div class="flow-container">
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-blue"><span class="icon">🔨</span> Workshops (Class 56–62)</div>
+      <div class="slide" data-slide="9">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Phase 7</div>
+          <div class="slide-number">09 / 18</div>
+        </div>
+        <div class="slide-title">Projects & Workshop</div>
+        <div class="slide-subtitle">
+          Class 56–75 &nbsp;·&nbsp; อาจารย์เอิร์ธ, ซูพรีม, นนท์ &nbsp;·&nbsp;
+          ถึงเวลาลงมือทำ! Workshop, Personal Project จริง และ Git workflow
+          ระดับทีม 💼
+        </div>
+        <div class="slide-content">
+          <div class="flow-container">
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-blue">
+                <span class="icon">🔨</span> Workshops (Class 56–62)
+              </div>
+            </div>
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-yellow">
+                <span class="icon">💡</span> Personal Project — SRS, Figma, ER
+                Diagram
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-yellow">
+                <span class="icon">🚀</span> Personal Project — Implementation
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-green">
+                <span class="icon">🎤</span> Presentation
+              </div>
+            </div>
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-orange">
+                <span class="icon">📋</span> PM & Agile
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-orange">
+                <span class="icon">🌿</span> Git Workflow & Advanced Commands
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-yellow"><span class="icon">💡</span> Personal Project — SRS, Figma, ER Diagram</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-yellow"><span class="icon">🚀</span> Personal Project — Implementation</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-green"><span class="icon">🎤</span> Presentation</div>
-      </div>
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-orange"><span class="icon">📋</span> PM & Agile</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-orange"><span class="icon">🌿</span> Git Workflow & Advanced Commands</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 10 — PHASE 8: AI & DEMO DAY
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="10">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Phase 8</div>
-    <div class="slide-number">10 / 18</div>
-  </div>
-  <div class="slide-title">AI & Demo Day <span class="hl-star">⭐ Advanced Track</span></div>
-  <div class="slide-subtitle">Class 76–98 &nbsp;·&nbsp; อาจารย์นนท์ + Team &nbsp;·&nbsp; Build with AI — รวม AI Workflow เข้า Project แล้วโชว์ผลงานในวัน Demo Day! 🤖🎉</div>
-  <div class="slide-content">
-    <div class="flow-container">
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-purple"><span class="icon">🤖</span> n8n AI Workflow</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-purple"><span class="icon">👥</span> Group Project + AI (Class 77–87)</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-blue"><span class="icon">🛠</span> AI Tools for Developer</div>
+      <div class="slide" data-slide="10">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Phase 8</div>
+          <div class="slide-number">10 / 18</div>
+        </div>
+        <div class="slide-title">
+          AI & Demo Day <span class="hl-star">⭐ Advanced Track</span>
+        </div>
+        <div class="slide-subtitle">
+          Class 76–98 &nbsp;·&nbsp; อาจารย์นนท์ + Team &nbsp;·&nbsp; Build with
+          AI — รวม AI Workflow เข้า Project แล้วโชว์ผลงานในวัน Demo Day! 🤖🎉
+        </div>
+        <div class="slide-content">
+          <div class="flow-container">
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-purple">
+                <span class="icon">🤖</span> n8n AI Workflow
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-purple">
+                <span class="icon">👥</span> Group Project + AI (Class 77–87)
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-blue">
+                <span class="icon">🛠</span> AI Tools for Developer
+              </div>
+            </div>
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-green">
+                <span class="icon">🐳</span> Docker & Deployment + TDD
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-orange">
+                <span class="icon">🧠</span> System Design, Algorithm (Optional)
+              </div>
+            </div>
+            <div class="flow-row anim-item">
+              <div class="flow-step highlight-yellow">
+                <span class="icon">💼</span> Personal Project + AI Tools (Class
+                91–97)
+              </div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step highlight-green">
+                <span class="icon">🎉</span> Demo Day!
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-green"><span class="icon">🐳</span> Docker & Deployment + TDD</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-orange"><span class="icon">🧠</span> System Design, Algorithm (Optional)</div>
-      </div>
-      <div class="flow-row anim-item">
-        <div class="flow-step highlight-yellow"><span class="icon">💼</span> Personal Project + AI Tools (Class 91–97)</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step highlight-green"><span class="icon">🎉</span> Demo Day!</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 11 — AI TOOLS FOR DEVELOPER
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="11">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>AI Tools</div>
-    <div class="slide-number">11 / 18</div>
-  </div>
-  <div class="slide-title">AI Tools for Developer 🤖</div>
-  <div class="slide-subtitle">สอนโดย อาจารย์วู้ดดี้ &nbsp;·&nbsp; เรียนรู้การใช้ AI เป็น coding partner — เขียนโค้ดเร็วขึ้น, debug ฉลาดขึ้น, ส่งงานได้ไวขึ้นหลายเท่า ⚡</div>
-  <div class="slide-content">
-    <div class="cards-grid cols-3" style="margin-top:8px">
-      <div class="card anim-item" style="border-color:rgba(134,53,233,0.4);background:rgba(134,53,233,0.07);box-shadow:0 4px 20px rgba(134,53,233,0.12)">
-        <div class="card-icon">🤖</div>
-        <div class="card-title">Claude Code</div>
-        <div class="card-desc">AI coding assistant จาก Anthropic — ช่วยเขียน, review, debug และ refactor โค้ดใน terminal และ IDE ได้ทันที</div>
-        <div class="card-tag tag-purple" style="font-weight:700">👨‍🏫 อาจารย์วู้ดดี้</div>
+      <div class="slide" data-slide="11">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>AI Tools</div>
+          <div class="slide-number">11 / 18</div>
+        </div>
+        <div class="slide-title">AI Tools for Developer 🤖</div>
+        <div class="slide-subtitle">
+          สอนโดย อาจารย์วู้ดดี้ &nbsp;·&nbsp; เรียนรู้การใช้ AI เป็น coding
+          partner — เขียนโค้ดเร็วขึ้น, debug ฉลาดขึ้น, ส่งงานได้ไวขึ้นหลายเท่า
+          ⚡
+        </div>
+        <div class="slide-content">
+          <div class="cards-grid cols-3" style="margin-top: 8px">
+            <div
+              class="card anim-item"
+              style="
+                border-color: rgba(134, 53, 233, 0.4);
+                background: rgba(134, 53, 233, 0.07);
+                box-shadow: 0 4px 20px rgba(134, 53, 233, 0.12);
+              "
+            >
+              <div class="card-icon">🤖</div>
+              <div class="card-title">Claude Code</div>
+              <div class="card-desc">
+                AI coding assistant จาก Anthropic — ช่วยเขียน, review, debug และ
+                refactor โค้ดใน terminal และ IDE ได้ทันที
+              </div>
+              <div class="card-tag tag-purple" style="font-weight: 700">
+                👨‍🏫 อาจารย์วู้ดดี้
+              </div>
+            </div>
+            <div
+              class="card anim-item"
+              style="
+                border-color: rgba(212, 162, 0, 0.4);
+                background: rgba(255, 243, 95, 0.09);
+                box-shadow: 0 4px 20px rgba(212, 162, 0, 0.1);
+              "
+            >
+              <div class="card-icon">⚡</div>
+              <div class="card-title">Codex (OpenAI)</div>
+              <div class="card-desc">
+                AI model จาก OpenAI — generate โค้ด, อธิบาย code, เขียน test
+                และช่วย refactor ได้อย่างรวดเร็ว
+              </div>
+              <div class="card-tag tag-yellow" style="font-weight: 700">
+                👨‍🏫 อาจารย์วู้ดดี้
+              </div>
+            </div>
+            <div
+              class="card anim-item"
+              style="
+                border-color: rgba(14, 124, 94, 0.3);
+                background: rgba(14, 124, 94, 0.04);
+              "
+            >
+              <div class="card-icon">🔄</div>
+              <div class="card-title">n8n AI Workflow</div>
+              <div class="card-desc">
+                สร้าง automation workflow รวม AI เข้ากับ app จริง —
+                ไม่ต้องเขียนโค้ดทุกอย่างเอง
+              </div>
+              <div class="card-tag tag-green">อาจารย์นนท์</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card anim-item" style="border-color:rgba(212,162,0,0.4);background:rgba(255,243,95,0.09);box-shadow:0 4px 20px rgba(212,162,0,0.1)">
-        <div class="card-icon">⚡</div>
-        <div class="card-title">Codex (OpenAI)</div>
-        <div class="card-desc">AI model จาก OpenAI — generate โค้ด, อธิบาย code, เขียน test และช่วย refactor ได้อย่างรวดเร็ว</div>
-        <div class="card-tag tag-yellow" style="font-weight:700">👨‍🏫 อาจารย์วู้ดดี้</div>
-      </div>
-      <div class="card anim-item" style="border-color:rgba(14,124,94,0.3);background:rgba(14,124,94,0.04)">
-        <div class="card-icon">🔄</div>
-        <div class="card-title">n8n AI Workflow</div>
-        <div class="card-desc">สร้าง automation workflow รวม AI เข้ากับ app จริง — ไม่ต้องเขียนโค้ดทุกอย่างเอง</div>
-        <div class="card-tag tag-green">Automation</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 12 — ทำไมถึงควรเรียนกับ DevNest
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="12">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Why DevNest</div>
-    <div class="slide-number">12 / 18</div>
-  </div>
-  <div class="slide-title">ทำไมถึงควรเรียนกับ DevNest?</div>
-  <div class="slide-subtitle">พิสูจน์จากผลลัพธ์จริง — นักเรียนใหม่ 80% มาจากการบอกต่อของศิษย์เก่า 📊</div>
-  <div class="slide-content">
-    <div class="cards-grid cols-3" style="margin-top:8px">
-      <div class="card anim-item">
-        <div class="card-icon">👨‍💻</div>
-        <div class="card-title">อาจารย์ระดับ Tech Lead</div>
-        <div class="card-desc">ประสบการณ์พัฒนาโปรเจคจริงมากกว่า 10 ปี สอน Bootcamp และ Advanced JS Stack มากกว่า 10+ รุ่น</div>
-        <div class="card-tag tag-purple">10+ ปี</div>
+      <div class="slide" data-slide="12">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Why DevNest</div>
+          <div class="slide-number">12 / 18</div>
+        </div>
+        <div class="slide-title">ทำไมถึงควรเรียนกับ DevNest?</div>
+        <div class="slide-subtitle">
+          พิสูจน์จากผลลัพธ์จริง — นักเรียนใหม่ 80% มาจากการบอกต่อของศิษย์เก่า 📊
+        </div>
+        <div class="slide-content">
+          <div class="cards-grid cols-3" style="margin-top: 8px">
+            <div class="card anim-item">
+              <div class="card-icon">👨‍💻</div>
+              <div class="card-title">อาจารย์ระดับ Tech Lead</div>
+              <div class="card-desc">
+                ประสบการณ์พัฒนาโปรเจคจริงมากกว่า 10 ปี สอน Bootcamp และ Advanced
+                JS Stack มากกว่า 10+ รุ่น
+              </div>
+              <div class="card-tag tag-purple">10+ ปี</div>
+            </div>
+            <div class="card anim-item">
+              <div class="card-icon">🚀</div>
+              <div class="card-title">สอนถึงระดับ Advanced Stack</div>
+              <div class="card-desc">
+                TypeScript, Next.js, NestJS — Framework ที่บริษัทสาย JS/TS
+                ส่วนใหญ่ใช้จริง ไม่ต้องหาเรียนที่อื่น
+              </div>
+              <div class="card-tag tag-blue">TS · Next · Nest</div>
+            </div>
+            <div class="card anim-item">
+              <div class="card-icon">🛠️</div>
+              <div class="card-title">เรียนจบ → ทำงานได้ทันที</div>
+              <div class="card-desc">
+                เรียนทฤษฎีลึกจริง รู้จริง พร้อม Workshop และ Project เดี่ยว +
+                กลุ่ม — ไม่ใช่แค่ดูวิดีโอ
+              </div>
+              <div class="card-tag tag-green">Project-based</div>
+            </div>
+            <div class="card anim-item">
+              <div class="card-icon">🙋</div>
+              <div class="card-title">ทีม Mentor คัดสรร</div>
+              <div class="card-desc">
+                พี่ Mentor พร้อมซัพพอร์ทระหว่างเรียน
+                และช่องทางติดต่อสำหรับศิษย์เก่าหลังจบคอร์ส
+              </div>
+              <div class="card-tag tag-orange">Full Support</div>
+            </div>
+            <div class="card anim-item">
+              <div class="card-icon">🤝</div>
+              <div class="card-title">Community ที่เหนียวแน่น</div>
+              <div class="card-desc">
+                ศิษย์เก่าแลกเปลี่ยนความรู้ เสนอตำแหน่งงานให้กัน
+                และมีกิจกรรมต่อยอด connection ต่อเนื่อง
+              </div>
+              <div class="card-tag tag-blue">Alumni Network</div>
+            </div>
+            <div class="card anim-item">
+              <div class="card-icon">🎥</div>
+              <div class="card-title">วิดีโอย้อนหลัง + ใบรับรอง</div>
+              <div class="card-desc">
+                ดูวิดีโอย้อนหลังได้ตลอด พร้อมใบรับรองจากสถาบัน
+                เพื่อเพิ่มความน่าเชื่อถือใน Portfolio
+              </div>
+              <div class="card-tag tag-yellow">Certificate</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card anim-item">
-        <div class="card-icon">🚀</div>
-        <div class="card-title">สอนถึงระดับ Advanced Stack</div>
-        <div class="card-desc">TypeScript, Next.js, NestJS — Framework ที่บริษัทสาย JS/TS ส่วนใหญ่ใช้จริง ไม่ต้องหาเรียนที่อื่น</div>
-        <div class="card-tag tag-blue">TS · Next · Nest</div>
-      </div>
-      <div class="card anim-item">
-        <div class="card-icon">🛠️</div>
-        <div class="card-title">เรียนจบ → ทำงานได้ทันที</div>
-        <div class="card-desc">เรียนทฤษฎีลึกจริง รู้จริง พร้อม Workshop และ Project เดี่ยว + กลุ่ม — ไม่ใช่แค่ดูวิดีโอ</div>
-        <div class="card-tag tag-green">Project-based</div>
-      </div>
-      <div class="card anim-item">
-        <div class="card-icon">🙋</div>
-        <div class="card-title">ทีม Mentor คัดสรร</div>
-        <div class="card-desc">พี่ Mentor พร้อมซัพพอร์ทระหว่างเรียน และช่องทางติดต่อสำหรับศิษย์เก่าหลังจบคอร์ส</div>
-        <div class="card-tag tag-orange">Full Support</div>
-      </div>
-      <div class="card anim-item">
-        <div class="card-icon">🤝</div>
-        <div class="card-title">Community ที่เหนียวแน่น</div>
-        <div class="card-desc">ศิษย์เก่าแลกเปลี่ยนความรู้ เสนอตำแหน่งงานให้กัน และมีกิจกรรมต่อยอด connection ต่อเนื่อง</div>
-        <div class="card-tag tag-blue">Alumni Network</div>
-      </div>
-      <div class="card anim-item">
-        <div class="card-icon">🎥</div>
-        <div class="card-title">วิดีโอย้อนหลัง + ใบรับรอง</div>
-        <div class="card-desc">ดูวิดีโอย้อนหลังได้ตลอด พร้อมใบรับรองจากสถาบัน เพื่อเพิ่มความน่าเชื่อถือใน Portfolio</div>
-        <div class="card-tag tag-yellow">Certificate</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 13 — เหมาะกับใคร
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="13">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>เหมาะกับใคร</div>
-    <div class="slide-number">13 / 18</div>
-  </div>
-  <div class="slide-title">Bootcamp นี้เหมาะกับใคร?</div>
-  <div class="slide-subtitle">ไม่ว่าจะจบสายไหน หรืออยู่ในสถานการณ์ไหน — ถ้าอยากเติบโตในสาย Tech คุณมาถูกที่แล้ว 🎯</div>
-  <div class="slide-content">
-    <div class="split-row">
-      <div class="mini-card anim-item" style="border-color:rgba(134,53,233,0.25)">
-        <div class="mini-card-title">🔄 อยากเปลี่ยนสายงาน</div>
-        <ul>
-          <li>เบื่องานเดิม อยากหาความท้าทายใหม่</li>
-          <li>จบสายศิลป์ วิทย์ วิศวะ หรือนิเทศฯ ก็เริ่มได้</li>
-          <li>ไม่จำเป็นต้องมีพื้นฐาน Coding มาก่อน</li>
-        </ul>
+      <div class="slide" data-slide="13">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>เหมาะกับใคร</div>
+          <div class="slide-number">13 / 18</div>
+        </div>
+        <div class="slide-title">Bootcamp นี้เหมาะกับใคร?</div>
+        <div class="slide-subtitle">
+          ไม่ว่าจะจบสายไหน หรืออยู่ในสถานการณ์ไหน — ถ้าอยากเติบโตในสาย Tech
+          คุณมาถูกที่แล้ว 🎯
+        </div>
+        <div class="slide-content">
+          <div class="split-row">
+            <div
+              class="mini-card anim-item"
+              style="border-color: rgba(134, 53, 233, 0.25)"
+            >
+              <div class="mini-card-title">🔄 อยากเปลี่ยนสายงาน</div>
+              <ul>
+                <li>เบื่องานเดิม อยากหาความท้าทายใหม่</li>
+                <li>จบสายศิลป์ วิทย์ วิศวะ หรือนิเทศฯ ก็เริ่มได้</li>
+                <li>ไม่จำเป็นต้องมีพื้นฐาน Coding มาก่อน</li>
+              </ul>
+            </div>
+            <div
+              class="mini-card anim-item"
+              style="border-color: rgba(14, 124, 94, 0.25)"
+            >
+              <div class="mini-card-title">💼 อยากเพิ่มสกิลหางาน</div>
+              <ul>
+                <li>หางานในสายที่เรียนมา แต่ตลาดไม่เปิดรับ</li>
+                <li>ต้องการสกิลเพิ่มเติมสำหรับตลาดงานอนาคต</li>
+                <li>อยากมี Project จริงใส่ใน Portfolio</li>
+              </ul>
+            </div>
+            <div
+              class="mini-card anim-item"
+              style="border-color: rgba(212, 162, 0, 0.3)"
+            >
+              <div class="mini-card-title">🏡 อยาก WFH / Remote</div>
+              <ul>
+                <li>สาย Programmer มีโอกาส WFH สูง</li>
+                <li>งานใช้สมาธิ ไม่จำเป็นต้องเข้าออฟฟิศทุกวัน</li>
+                <li>ยืดหยุ่นทั้งสถานที่และเวลา</li>
+              </ul>
+            </div>
+            <div
+              class="mini-card anim-item"
+              style="border-color: rgba(91, 33, 182, 0.25)"
+            >
+              <div class="mini-card-title">🤖 อยากใช้ AI อย่างยั่งยืน</div>
+              <ul>
+                <li>
+                  คนที่ย้ายสาย AI มักไปต่อไม่สุด เพราะขาด Software Architecture
+                </li>
+                <li>Coding คือจุดเริ่มต้นที่ทำให้เป็นหัวแถวในสาย AI ได้</li>
+                <li>เรียนรู้การสร้าง AI Workflow จริง ไม่ใช่แค่ใช้ Chatbot</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mini-card anim-item" style="border-color:rgba(14,124,94,0.25)">
-        <div class="mini-card-title">💼 อยากเพิ่มสกิลหางาน</div>
-        <ul>
-          <li>หางานในสายที่เรียนมา แต่ตลาดไม่เปิดรับ</li>
-          <li>ต้องการสกิลเพิ่มเติมสำหรับตลาดงานอนาคต</li>
-          <li>อยากมี Project จริงใส่ใน Portfolio</li>
-        </ul>
-      </div>
-      <div class="mini-card anim-item" style="border-color:rgba(212,162,0,0.3)">
-        <div class="mini-card-title">🏡 อยาก WFH / Remote</div>
-        <ul>
-          <li>สาย Programmer มีโอกาส WFH สูง</li>
-          <li>งานใช้สมาธิ ไม่จำเป็นต้องเข้าออฟฟิศทุกวัน</li>
-          <li>ยืดหยุ่นทั้งสถานที่และเวลา</li>
-        </ul>
-      </div>
-      <div class="mini-card anim-item" style="border-color:rgba(91,33,182,0.25)">
-        <div class="mini-card-title">🤖 อยากใช้ AI อย่างยั่งยืน</div>
-        <ul>
-          <li>คนที่ย้ายสาย AI มักไปต่อไม่สุด เพราะขาด Software Architecture</li>
-          <li>Coding คือจุดเริ่มต้นที่ทำให้เป็นหัวแถวในสาย AI ได้</li>
-          <li>เรียนรู้การสร้าง AI Workflow จริง ไม่ใช่แค่ใช้ Chatbot</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 14 — เราแตกต่างจากที่อื่นอย่างไร
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="14">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>ความแตกต่าง</div>
-    <div class="slide-number">14 / 18</div>
-  </div>
-  <div class="slide-title">เราแตกต่างจากที่อื่นอย่างไร?</div>
-  <div class="slide-subtitle">ไม่ใช่แค่ Bootcamp 4.5 เดือน — แต่คือการสร้างเส้นทางอาชีพที่ยั่งยืน 💻🚀</div>
-  <div class="slide-content">
-    <div class="two-col">
-      <div class="col-section anim-item">
-        <div class="section-label">📚 เนื้อหาและการสอน</div>
-        <ul class="bullet-list">
-          <li><span class="bullet"></span><strong>สอนลึกกว่า Basic</strong> — ไม่หยุดแค่ React/Express แต่พาไปถึง TypeScript, Next.js, NestJS, SQL + NoSQL</li>
-          <li><span class="bullet"></span><strong>เน้นคิดเอง ไม่ใช่แค่พึ่ง AI</strong> — ลงมือทำด้วยตัวเองก่อน แล้วค่อยใช้ AI ต่อยอด ทำให้แก้ปัญหาได้แม้ในสิ่งที่ AI ทำไม่ได้</li>
-          <li><span class="bullet"></span><strong>AI Workflow จริง</strong> — เรียนรู้สร้าง AI Workflow แก้ปัญหาที่ซับซ้อน ไม่ใช่แค่ "ใช้ AI"</li>
-        </ul>
+      <div class="slide" data-slide="14">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>ความแตกต่าง</div>
+          <div class="slide-number">14 / 18</div>
+        </div>
+        <div class="slide-title">เราแตกต่างจากที่อื่นอย่างไร?</div>
+        <div class="slide-subtitle">
+          ไม่ใช่แค่ Bootcamp 4.5 เดือน — แต่คือการสร้างเส้นทางอาชีพที่ยั่งยืน
+          💻🚀
+        </div>
+        <div class="slide-content">
+          <div class="two-col">
+            <div class="col-section anim-item">
+              <div class="section-label">📚 เนื้อหาและการสอน</div>
+              <ul class="bullet-list">
+                <li>
+                  <span class="bullet"></span
+                  ><strong>สอนลึกกว่า Basic</strong> — ไม่หยุดแค่ React/Express
+                  แต่พาไปถึง TypeScript, Next.js, NestJS, SQL + NoSQL
+                </li>
+                <li>
+                  <span class="bullet"></span
+                  ><strong>เน้นคิดเอง ไม่ใช่แค่พึ่ง AI</strong> —
+                  ลงมือทำด้วยตัวเองก่อน แล้วค่อยใช้ AI ต่อยอด
+                  ทำให้แก้ปัญหาได้แม้ในสิ่งที่ AI ทำไม่ได้
+                </li>
+                <li>
+                  <span class="bullet"></span
+                  ><strong>AI Workflow จริง</strong> — เรียนรู้สร้าง AI Workflow
+                  แก้ปัญหาที่ซับซ้อน ไม่ใช่แค่ "ใช้ AI"
+                </li>
+              </ul>
+            </div>
+            <div class="col-section anim-item">
+              <div class="section-label">🤝 Community & After-class</div>
+              <ul class="bullet-list">
+                <li>
+                  <span class="bullet"></span
+                  ><strong>อาจารย์พิสูจน์แล้ว</strong> — 80%
+                  ของนักเรียนใหม่มาจากการบอกต่อ คือการันตีคุณภาพที่แท้จริง
+                </li>
+                <li>
+                  <span class="bullet"></span
+                  ><strong>Community ยั่งยืน</strong> — ศิษย์เก่ากลับมาพูดคุย
+                  แบ่งปันความรู้ สร้าง network และเสนอตำแหน่งงานให้กัน
+                </li>
+                <li>
+                  <span class="bullet"></span><strong>Support หลังจบ</strong> —
+                  มีช่องทางติดต่ออาจารย์ ตอบคำถามหลังเรียนจบ ไม่ทิ้งกัน
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col-section anim-item">
-        <div class="section-label">🤝 Community & After-class</div>
-        <ul class="bullet-list">
-          <li><span class="bullet"></span><strong>อาจารย์พิสูจน์แล้ว</strong> — 80% ของนักเรียนใหม่มาจากการบอกต่อ คือการันตีคุณภาพที่แท้จริง</li>
-          <li><span class="bullet"></span><strong>Community ยั่งยืน</strong> — ศิษย์เก่ากลับมาพูดคุย แบ่งปันความรู้ สร้าง network และเสนอตำแหน่งงานให้กัน</li>
-          <li><span class="bullet"></span><strong>Support หลังจบ</strong> — มีช่องทางติดต่ออาจารย์ ตอบคำถามหลังเรียนจบ ไม่ทิ้งกัน</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 15 — การเดินทาง
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="15">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Location</div>
-    <div class="slide-number">15 / 18</div>
-  </div>
-  <div class="slide-title">การเดินทาง & ที่จอดรถ 🗺️</div>
-  <div class="slide-subtitle">เดินทางสะดวกหลายช่องทาง — มีรถรับส่ง BTS/MRT และที่จอดรถถึง 3 จุด 🚇</div>
-  <div class="slide-content">
-    <div class="cards-grid cols-2" style="margin-top:8px;max-width:900px">
-      <div class="card anim-item">
-        <div class="card-icon">🚇</div>
-        <div class="card-title">ขนส่งสาธารณะ</div>
-        <div class="card-desc" style="display:flex;flex-direction:column;gap:6px;margin-top:6px">
-          <span>🚃 <strong>รถรับส่ง</strong> จาก BTS พญาไท และ MRT ศูนย์วัฒนธรรม</span>
-          <span>🚌 รถประจำทาง — สะดวก หลายสาย</span>
-          <span>🚗 รถยนต์ส่วนตัว — มีที่จอดรถรองรับ</span>
+      <div class="slide" data-slide="15">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Location</div>
+          <div class="slide-number">15 / 18</div>
         </div>
-        <div class="card-tag tag-blue" style="margin-top:10px">มีรถรับส่ง BTS + MRT</div>
-      </div>
-      <div class="card anim-item">
-        <div class="card-icon">🅿️</div>
-        <div class="card-title">ที่จอดรถ 3 จุด</div>
-        <div class="card-desc" style="display:flex;flex-direction:column;gap:6px;margin-top:6px">
-          <span>🏢 <strong>ลานจอดใกล้เคียง</strong> — 50 บ./วัน หรือ 700 บ./เดือน (เดิน ~100 ม.)</span>
-          <span>🚶 <strong>ที่จอดสาธารณะ</strong> — เดินเพียง 50 เมตร</span>
-          <span>🚇 <strong>ลาน MRT รฟม.</strong> — มีหลังคากันแดด (เดิน ~900 ม.)</span>
+        <div class="slide-title">การเดินทาง & ที่จอดรถ 🗺️</div>
+        <div class="slide-subtitle">
+          เดินทางสะดวกหลายช่องทาง — มีรถรับส่ง BTS/MRT และที่จอดรถถึง 3 จุด 🚇
         </div>
-        <div class="card-tag tag-green" style="margin-top:10px">ดูแผนที่ในคอมเมนต์</div>
+        <div class="slide-content">
+          <div
+            class="cards-grid cols-2"
+            style="margin-top: 8px; max-width: 900px"
+          >
+            <div class="card anim-item">
+              <div class="card-icon">🚇</div>
+              <div class="card-title">ขนส่งสาธารณะ</div>
+              <div
+                class="card-desc"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  gap: 6px;
+                  margin-top: 6px;
+                "
+              >
+                <span
+                  >🚃 <strong>รถรับส่ง</strong> จาก BTS พญาไท และ MRT
+                  ศูนย์วัฒนธรรม</span
+                >
+                <span>🚌 รถประจำทาง — สะดวก หลายสาย</span>
+                <span>🚗 รถยนต์ส่วนตัว — มีที่จอดรถรองรับ</span>
+              </div>
+              <div class="card-tag tag-blue" style="margin-top: 10px">
+                มีรถรับส่ง BTS + MRT
+              </div>
+            </div>
+            <div class="card anim-item">
+              <div class="card-icon">🅿️</div>
+              <div class="card-title">ที่จอดรถ 3 จุด</div>
+              <div
+                class="card-desc"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  gap: 6px;
+                  margin-top: 6px;
+                "
+              >
+                <span
+                  >🏢 <strong>ลานจอดใกล้เคียง</strong> — 50 บ./วัน หรือ 700
+                  บ./เดือน (เดิน ~100 ม.)</span
+                >
+                <span
+                  >🚶 <strong>ที่จอดสาธารณะ</strong> — เดินเพียง 50 เมตร</span
+                >
+                <span
+                  >🚇 <strong>ลาน MRT รฟม.</strong> — มีหลังคากันแดด (เดิน ~900
+                  ม.)</span
+                >
+              </div>
+              <div class="card-tag tag-green" style="margin-top: 10px">
+                ดูแผนที่ในคอมเมนต์
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 16 — CLASSROOM ATMOSPHERE
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="16">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>บรรยากาศ</div>
-    <div class="slide-number">16 / 18</div>
-  </div>
-  <div class="slide-title">บรรยากาศการเรียน</div>
-  <div class="slide-subtitle">เรียน Onsite ด้วยกัน — บรรยากาศสนุก เข้มข้น และเติบโตไปพร้อมเพื่อนร่วมรุ่น 🏫✨</div>
-  <div class="slide-content">
-    <div class="photo-grid">
-      <div class="photo-item anim-item" onclick="openLightbox('image/Class room/20251108_133325.jpg')">
-        <img src="image/Class room/20251108_133325.jpg" alt="Classroom">
+      <div class="slide" data-slide="16">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>บรรยากาศ</div>
+          <div class="slide-number">16 / 18</div>
+        </div>
+        <div class="slide-title">บรรยากาศการเรียน</div>
+        <div class="slide-subtitle">
+          เรียน Onsite ด้วยกัน — บรรยากาศสนุก เข้มข้น
+          และเติบโตไปพร้อมเพื่อนร่วมรุ่น 🏫✨
+        </div>
+        <div class="slide-content">
+          <div class="photo-grid">
+            <div
+              class="photo-item anim-item"
+              onclick="openLightbox('image/Class room/20251108_133325.jpg')"
+            >
+              <img src="image/Class room/20251108_133325.jpg" alt="Classroom" />
+            </div>
+            <div
+              class="photo-item anim-item"
+              onclick="openLightbox('image/Class room/20251108_143950.jpg')"
+            >
+              <img src="image/Class room/20251108_143950.jpg" alt="Classroom" />
+            </div>
+            <div
+              class="photo-item anim-item"
+              onclick="openLightbox('image/Class room/20251201_100250.jpg')"
+            >
+              <img src="image/Class room/20251201_100250.jpg" alt="Classroom" />
+            </div>
+            <div
+              class="photo-item anim-item"
+              onclick="openLightbox('image/Class room/20251201_100300.jpg')"
+            >
+              <img src="image/Class room/20251201_100300.jpg" alt="Classroom" />
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="photo-item anim-item" onclick="openLightbox('image/Class room/20251108_143950.jpg')">
-        <img src="image/Class room/20251108_143950.jpg" alt="Classroom">
-      </div>
-      <div class="photo-item anim-item" onclick="openLightbox('image/Class room/20251201_100250.jpg')">
-        <img src="image/Class room/20251201_100250.jpg" alt="Classroom">
-      </div>
-      <div class="photo-item anim-item" onclick="openLightbox('image/Class room/20251201_100300.jpg')">
-        <img src="image/Class room/20251201_100300.jpg" alt="Classroom">
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 12 — TEACHERS
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="17">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Our Team</div>
-    <div class="slide-number">17 / 18</div>
-  </div>
-  <div class="slide-title">Meet the Teachers</div>
-  <div class="slide-subtitle">ทีมอาจารย์มากประสบการณ์จากสายงานจริง — พร้อมถ่ายทอดทุก trick ที่ใช้ได้จริงในโลกการทำงาน 👨‍💻</div>
-  <div class="slide-content">
-    <div class="team-grid-4">
-      <div class="team-card anim-item">
-        <img src="image/Teacher Nont.png" alt="อาจารย์นนท์">
-        <div class="team-name">อาจารย์นนท์</div>
-        <div class="team-role">Fullstack Developer</div>
-        <div class="team-tags">
-          <span class="team-tag">HTML/CSS</span><span class="team-tag">Tailwind</span>
-          <span class="team-tag">Git</span><span class="team-tag">Docker</span><span class="team-tag">n8n AI</span>
+      <div class="slide" data-slide="17">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Our Team</div>
+          <div class="slide-number">17 / 18</div>
+        </div>
+        <div class="slide-title">Meet the Teachers</div>
+        <div class="slide-subtitle">
+          ทีมอาจารย์มากประสบการณ์จากสายงานจริง — พร้อมถ่ายทอดทุก trick
+          ที่ใช้ได้จริงในโลกการทำงาน 👨‍💻
+        </div>
+        <div class="slide-content">
+          <div class="team-grid-4">
+            <div class="team-card anim-item">
+              <img src="image/Teacher Nont.png" alt="อาจารย์นนท์" />
+              <div class="team-name">อาจารย์นนท์</div>
+              <div class="team-role">Fullstack Developer</div>
+              <div class="team-tags">
+                <span class="team-tag">HTML/CSS</span
+                >
+                <span class="team-tag">Tailwind</span>
+                <span class="team-tag">JavaScript</span>
+                <span class="team-tag">TypeScript</span>
+                <span class="team-tag">Git</span
+                >
+                <span class="team-tag">Unit Test</span
+                >
+                <span class="team-tag">Docker</span
+                ><span class="team-tag">n8n AI</span>
+              </div>
+            </div>
+            <div class="team-card anim-item">
+              <img src="image/Teacher Earth.png" alt="อาจารย์เอิร์ธ" />
+              <div class="team-name">อาจารย์เอิร์ธ</div>
+              <div class="team-role">Fullstack Developer</div>
+              <div class="team-tags">
+                <span class="team-tag">Express</span>
+                <span class="team-tag">React</span>
+                <span class="team-tag">Node.js</span
+                ><span class="team-tag">Next.js</span
+                ><span class="team-tag">NestJS</span>
+              </div>
+            </div>
+            <div class="team-card anim-item">
+              <img src="image/Teacher Zupream.png" alt="อาจารย์ซูพรีม" />
+              <div class="team-name">อาจารย์ซูพรีม</div>
+              <div class="team-role">UX/UI & Product</div>
+              <div class="team-tags">
+                <span class="team-tag">UX/UI</span
+                ><span class="team-tag">Figma</span>
+                <span class="team-tag">PM/PO/BA</span
+                ><span class="team-tag">Agile</span>
+              </div>
+            </div>
+            <div class="team-card anim-item">
+              <img src="image/Teacher Woody.png" alt="อาจารย์วู้ดดี้" />
+              <div class="team-name">อาจารย์วู้ดดี้</div>
+              <div class="team-role">AI Tools & Marketing for Devs</div>
+              <div class="team-tags">
+                <span
+                  class="team-tag"
+                  style="
+                    background: rgba(134, 53, 233, 0.15);
+                    border-color: rgba(134, 53, 233, 0.4);
+                    font-weight: 700;
+                  "
+                  >🤖 Claude Code</span
+                >
+                <span
+                  class="team-tag"
+                  style="
+                    background: rgba(212, 162, 0, 0.15);
+                    border-color: rgba(212, 162, 0, 0.4);
+                    color: #8a6000;
+                    font-weight: 700;
+                  "
+                  >⚡ Codex</span
+                >
+                <span class="team-tag">Marketing</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="team-card anim-item">
-        <img src="image/Teacher Earth.png" alt="อาจารย์เอิร์ธ">
-        <div class="team-name">อาจารย์เอิร์ธ</div>
-        <div class="team-role">Fullstack Developer</div>
-        <div class="team-tags">
-          <span class="team-tag">JavaScript</span><span class="team-tag">React</span>
-          <span class="team-tag">Node.js</span><span class="team-tag">Next.js</span><span class="team-tag">NestJS</span>
-        </div>
-      </div>
-      <div class="team-card anim-item">
-        <img src="image/Teacher Zupream.png" alt="อาจารย์ซูพรีม">
-        <div class="team-name">อาจารย์ซูพรีม</div>
-        <div class="team-role">UX/UI & Product</div>
-        <div class="team-tags">
-          <span class="team-tag">UX/UI</span><span class="team-tag">Figma</span>
-          <span class="team-tag">PM</span><span class="team-tag">Agile</span>
-        </div>
-      </div>
-      <div class="team-card anim-item">
-        <img src="image/Teacher Woody.png" alt="อาจารย์วู้ดดี้">
-        <div class="team-name">อาจารย์วู้ดดี้</div>
-        <div class="team-role">AI Tools & Marketing for Devs</div>
-        <div class="team-tags">
-          <span class="team-tag" style="background:rgba(134,53,233,0.15);border-color:rgba(134,53,233,0.4);font-weight:700">🤖 Claude Code</span>
-          <span class="team-tag" style="background:rgba(212,162,0,0.15);border-color:rgba(212,162,0,0.4);color:#8A6000;font-weight:700">⚡ Codex</span>
-          <span class="team-tag">Marketing</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 13 — MENTORS
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="18">
-  <div class="slide-header">
-    <div class="slide-badge"><span class="dot"></span>Mentors</div>
-    <div class="slide-number">18 / 18</div>
-  </div>
-  <div class="slide-title">Meet the Mentors</div>
-  <div class="slide-subtitle">ติดขัดตรงไหน? พี่ mentor พร้อมอยู่เคียงข้างทุกก้าวของการเรียน — ไม่มีคำถามที่โง่ 💜</div>
-  <div class="slide-content" style="align-items:center">
-    <div class="team-grid-3">
-      <div class="team-card mentor anim-item">
-        <img src="image/Mentor Jeng.png" alt="Mentor เจ้ง">
-        <div class="team-name">Mentor เจ้ง</div>
-        <div class="team-role">Full-Stack Mentor</div>
+      <div class="slide" data-slide="18">
+        <div class="slide-header">
+          <div class="slide-badge"><span class="dot"></span>Mentors</div>
+          <div class="slide-number">18 / 18</div>
+        </div>
+        <div class="slide-title">Meet the Mentors</div>
+        <div class="slide-subtitle">
+          ติดขัดตรงไหน? พี่ mentor พร้อมอยู่เคียงข้างทุกก้าวของการเรียน —
+          ไม่มีคำถามที่โง่ 💜
+        </div>
+        <div class="slide-content" style="align-items: center">
+          <div class="team-grid-3">
+            
+            <div class="team-card mentor anim-item">
+              <img src="image/Mentor Por.png" alt="Mentor พร" />
+              <div class="team-name">Mentor ปอ</div>
+              <div class="team-role">Full-Stack Mentor</div>
+            </div>
+            <div class="team-card mentor anim-item">
+              <img src="image/Mentor Mink.png" alt="Mentor มิ้งค์" />
+              <div class="team-name">Mentor มิ้งค์</div>
+              <div class="team-role">Full-Stack Mentor</div>
+            </div>
+            <div class="team-card mentor anim-item">
+              <img src="image/Mentor Jeng.png" alt="Mentor เจ้ง" />
+              <div class="team-name">Mentor เจ๋ง</div>
+              <div class="team-role">Full-Stack Mentor</div>
+            </div>
+            
+          </div>
+        </div>
       </div>
-      <div class="team-card mentor anim-item">
-        <img src="image/Mentor Mink.png" alt="Mentor มิ้งค์">
-        <div class="team-name">Mentor มิ้งค์</div>
-        <div class="team-role">Full-Stack Mentor</div>
-      </div>
-      <div class="team-card mentor anim-item">
-        <img src="image/Mentor Por.png" alt="Mentor พร">
-        <div class="team-name">Mentor พร</div>
-        <div class="team-role">Full-Stack Mentor</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
      SLIDE 14 — CLOSING
 ═══════════════════════════════════════ -->
-<div class="slide" data-slide="19">
-  <div class="slide-content end-content">
-    <img src="image/logo/1.png" alt="DevNest" class="end-logo anim-item">
-    <div class="end-title anim-item">พร้อมเป็น Full-Stack Developer แล้วหรือยัง?</div>
-    <div class="slide-subtitle anim-item" style="-webkit-text-fill-color:var(--text-secondary);background:none">
-      98 classes &nbsp;·&nbsp; 4.5 เดือน &nbsp;·&nbsp; Onsite &nbsp;·&nbsp; Project จริง &nbsp;·&nbsp; Demo Day 🎉
+      <div class="slide" data-slide="19">
+        <div class="slide-content end-content">
+          <img
+            src="image/logo/1.png"
+            alt="DevNest"
+            class="end-logo anim-item"
+          />
+          <div class="end-title anim-item">
+            พร้อมเป็น Full-Stack Developer แล้วหรือยัง?
+          </div>
+          <div
+            class="slide-subtitle anim-item"
+            style="
+              -webkit-text-fill-color: var(--text-secondary);
+              background: none;
+            "
+          >
+            98 classes &nbsp;·&nbsp; 4.5 เดือน &nbsp;·&nbsp; Onsite
+            &nbsp;·&nbsp; Project จริง &nbsp;·&nbsp; Demo Day 🎉
+          </div>
+          <div class="cover-roles anim-item">
+            <div
+              class="role-chip"
+              style="
+                border-color: rgba(134, 53, 233, 0.3);
+                color: var(--primary);
+              "
+            >
+              DevNest Codecamp
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="cover-roles anim-item">
-      <div class="role-chip" style="border-color:rgba(134,53,233,0.3);color:var(--primary)">DevNest Codecamp</div>
+    <!-- /presentation -->
+
+    <!-- LIGHTBOX -->
+    <div
+      class="lightbox-overlay"
+      id="lightbox"
+      onclick="this.classList.remove('open')"
+    >
+      <img id="lightboxImg" src="" alt="Photo" />
     </div>
-  </div>
-</div>
 
-</div><!-- /presentation -->
+    <!-- FULLSCREEN -->
+    <button class="fullscreen-btn" id="fullscreenBtn" title="Fullscreen (F)">
+      ⛶
+    </button>
 
-<!-- LIGHTBOX -->
-<div class="lightbox-overlay" id="lightbox" onclick="this.classList.remove('open')">
-  <img id="lightboxImg" src="" alt="Photo">
-</div>
+    <!-- DROPDOWN -->
+    <div class="page-dropdown" id="pageDropdown"></div>
 
-<!-- FULLSCREEN -->
-<button class="fullscreen-btn" id="fullscreenBtn" title="Fullscreen (F)">⛶</button>
+    <!-- NAV BAR -->
+    <div class="nav-bar" id="navBar">
+      <button
+        class="nav-btn"
+        id="homeBtn"
+        title="Home (H)"
+        style="font-size: 18px"
+      >
+        ⌂
+      </button>
+      <button class="nav-btn" id="prevBtn" title="Previous (←)">‹</button>
+      <div class="nav-progress" id="navProgress"></div>
+      <button class="nav-btn" id="nextBtn" title="Next (→)">›</button>
+      <div class="nav-counter" id="navCounter">1 / 16</div>
+      <button class="nav-btn" id="menuBtn" title="Slide Menu">☰</button>
+    </div>
 
-<!-- DROPDOWN -->
-<div class="page-dropdown" id="pageDropdown"></div>
+    <script>
+      function openLightbox(src) {
+        document.getElementById("lightboxImg").src = src;
+        document.getElementById("lightbox").classList.add("open");
+      }
 
-<!-- NAV BAR -->
-<div class="nav-bar" id="navBar">
-  <button class="nav-btn" id="homeBtn" title="Home (H)" style="font-size:18px">⌂</button>
-  <button class="nav-btn" id="prevBtn" title="Previous (←)">‹</button>
-  <div class="nav-progress" id="navProgress"></div>
-  <button class="nav-btn" id="nextBtn" title="Next (→)">›</button>
-  <div class="nav-counter" id="navCounter">1 / 16</div>
-  <button class="nav-btn" id="menuBtn" title="Slide Menu">☰</button>
-</div>
+      (function () {
+        const slides = document.querySelectorAll(".slide");
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        let animTimer = null;
+        let dropdownOpen = false;
 
-<script>
-function openLightbox(src) {
-  document.getElementById('lightboxImg').src = src;
-  document.getElementById('lightbox').classList.add('open');
-}
+        const slideTitles = [
+          "00 — Cover",
+          "01 — 2 Tracks",
+          "02 — Tech Stack",
+          "03 — Phase 1: Web Foundations",
+          "04 — Phase 2: JavaScript",
+          "05 — Phase 3: Backend",
+          "06 — Phase 4: TypeScript & Auth",
+          "07 — Phase 5: React & UI/UX",
+          "08 — Phase 6: Advanced Stack",
+          "09 — Phase 7: Projects & Workshop",
+          "10 — Phase 8: AI & Demo Day",
+          "11 — AI Tools for Developer",
+          "12 — ทำไมถึงควรเรียนกับ DevNest",
+          "13 — เหมาะกับใคร",
+          "14 — เราแตกต่างจากที่อื่น",
+          "15 — การเดินทาง & ที่จอดรถ",
+          "16 — บรรยากาศการเรียน",
+          "17 — Meet the Teachers",
+          "18 — Meet the Mentors",
+          "19 — Closing",
+        ];
 
-(function() {
-  const slides = document.querySelectorAll('.slide');
-  const totalSlides = slides.length;
-  let currentSlide = 0;
-  let animTimer = null;
-  let dropdownOpen = false;
+        const navProgress = document.getElementById("navProgress");
+        for (let i = 0; i < totalSlides; i++) {
+          const dot = document.createElement("div");
+          dot.className = "nav-dot" + (i === 0 ? " active" : "");
+          dot.addEventListener("click", () => goToSlide(i));
+          navProgress.appendChild(dot);
+        }
 
-  const slideTitles = [
-    '00 — Cover',
-    '01 — 2 Tracks',
-    '02 — Tech Stack',
-    '03 — Phase 1: Web Foundations',
-    '04 — Phase 2: JavaScript',
-    '05 — Phase 3: Backend',
-    '06 — Phase 4: TypeScript & Auth',
-    '07 — Phase 5: React & UI/UX',
-    '08 — Phase 6: Advanced Stack',
-    '09 — Phase 7: Projects & Workshop',
-    '10 — Phase 8: AI & Demo Day',
-    '11 — AI Tools for Developer',
-    '12 — ทำไมถึงควรเรียนกับ DevNest',
-    '13 — เหมาะกับใคร',
-    '14 — เราแตกต่างจากที่อื่น',
-    '15 — การเดินทาง & ที่จอดรถ',
-    '16 — บรรยากาศการเรียน',
-    '17 — Meet the Teachers',
-    '18 — Meet the Mentors',
-    '19 — Closing',
-  ];
+        const dropdown = document.getElementById("pageDropdown");
+        slideTitles.forEach((title, i) => {
+          const item = document.createElement("div");
+          item.className = "page-dropdown-item" + (i === 0 ? " active" : "");
+          item.innerHTML = `<span class="item-num">${String(i).padStart(2, "0")}</span> ${title}`;
+          item.addEventListener("click", (e) => {
+            e.stopPropagation();
+            toggleDropdown(false);
+            requestAnimationFrame(() => goToSlide(i));
+          });
+          dropdown.appendChild(item);
+        });
 
-  const navProgress = document.getElementById('navProgress');
-  for (let i = 0; i < totalSlides; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
-    dot.addEventListener('click', () => goToSlide(i));
-    navProgress.appendChild(dot);
-  }
+        function goToSlide(index) {
+          if (index === currentSlide || index < 0 || index >= totalSlides)
+            return;
+          if (animTimer) {
+            clearTimeout(animTimer);
+            slides.forEach((s) => {
+              s.classList.remove("active", "prev");
+              s.style.transform = "";
+            });
+          }
+          const prev = slides[currentSlide];
+          const next = slides[index];
+          const fwd = index > currentSlide;
+          prev.classList.remove("active");
+          if (fwd) prev.classList.add("prev");
+          next.style.transition = "none";
+          next.style.transform = fwd ? "translateX(60px)" : "translateX(-60px)";
+          next.style.opacity = "0";
+          next.offsetHeight;
+          next.style.transition = "";
+          next.style.transform = "";
+          next.style.opacity = "";
+          next.classList.add("active");
+          currentSlide = index;
+          updateUI();
+          animTimer = setTimeout(() => {
+            prev.classList.remove("prev");
+            prev.style.transform = "";
+            animTimer = null;
+          }, 500);
+        }
 
-  const dropdown = document.getElementById('pageDropdown');
-  slideTitles.forEach((title, i) => {
-    const item = document.createElement('div');
-    item.className = 'page-dropdown-item' + (i === 0 ? ' active' : '');
-    item.innerHTML = `<span class="item-num">${String(i).padStart(2,'0')}</span> ${title}`;
-    item.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleDropdown(false);
-      requestAnimationFrame(() => goToSlide(i));
-    });
-    dropdown.appendChild(item);
-  });
+        function updateUI() {
+          document.getElementById("navCounter").textContent =
+            `${currentSlide + 1} / ${totalSlides}`;
+          navProgress
+            .querySelectorAll(".nav-dot")
+            .forEach((d, i) =>
+              d.classList.toggle("active", i === currentSlide),
+            );
+          document.getElementById("prevBtn").disabled = currentSlide === 0;
+          document.getElementById("nextBtn").disabled =
+            currentSlide === totalSlides - 1;
+          document.getElementById("homeBtn").disabled = currentSlide === 0;
+          dropdown
+            .querySelectorAll(".page-dropdown-item")
+            .forEach((el, i) =>
+              el.classList.toggle("active", i === currentSlide),
+            );
+        }
 
-  function goToSlide(index) {
-    if (index === currentSlide || index < 0 || index >= totalSlides) return;
-    if (animTimer) {
-      clearTimeout(animTimer);
-      slides.forEach(s => { s.classList.remove('active','prev'); s.style.transform=''; });
-    }
-    const prev = slides[currentSlide];
-    const next = slides[index];
-    const fwd = index > currentSlide;
-    prev.classList.remove('active');
-    if (fwd) prev.classList.add('prev');
-    next.style.transition = 'none';
-    next.style.transform = fwd ? 'translateX(60px)' : 'translateX(-60px)';
-    next.style.opacity = '0';
-    next.offsetHeight;
-    next.style.transition = '';
-    next.style.transform = '';
-    next.style.opacity = '';
-    next.classList.add('active');
-    currentSlide = index;
-    updateUI();
-    animTimer = setTimeout(() => {
-      prev.classList.remove('prev');
-      prev.style.transform = '';
-      animTimer = null;
-    }, 500);
-  }
+        function toggleDropdown(state) {
+          dropdownOpen = state !== undefined ? state : !dropdownOpen;
+          dropdown.classList.toggle("open", dropdownOpen);
+        }
 
-  function updateUI() {
-    document.getElementById('navCounter').textContent = `${currentSlide + 1} / ${totalSlides}`;
-    navProgress.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide));
-    document.getElementById('prevBtn').disabled = currentSlide === 0;
-    document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
-    document.getElementById('homeBtn').disabled = currentSlide === 0;
-    dropdown.querySelectorAll('.page-dropdown-item').forEach((el, i) => el.classList.toggle('active', i === currentSlide));
-  }
+        document
+          .getElementById("homeBtn")
+          .addEventListener("click", () => goToSlide(0));
+        document
+          .getElementById("prevBtn")
+          .addEventListener("click", () => goToSlide(currentSlide - 1));
+        document
+          .getElementById("nextBtn")
+          .addEventListener("click", () => goToSlide(currentSlide + 1));
+        document.getElementById("menuBtn").addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleDropdown();
+        });
+        document
+          .getElementById("fullscreenBtn")
+          .addEventListener("click", () => {
+            if (!document.fullscreenElement)
+              document.documentElement.requestFullscreen();
+            else document.exitFullscreen();
+          });
 
-  function toggleDropdown(state) {
-    dropdownOpen = state !== undefined ? state : !dropdownOpen;
-    dropdown.classList.toggle('open', dropdownOpen);
-  }
+        document.addEventListener("keydown", (e) => {
+          if (["ArrowRight", " "].includes(e.key)) {
+            e.preventDefault();
+            goToSlide(currentSlide + 1);
+          } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            goToSlide(currentSlide - 1);
+          } else if (e.key === "Home" || e.key === "h" || e.key === "H") {
+            e.preventDefault();
+            goToSlide(0);
+          } else if (e.key === "End") {
+            e.preventDefault();
+            goToSlide(totalSlides - 1);
+          } else if (e.key === "f" || e.key === "F")
+            document.getElementById("fullscreenBtn").click();
+          else if (e.key === "Escape") {
+            toggleDropdown(false);
+            document.getElementById("lightbox").classList.remove("open");
+          }
+        });
 
-  document.getElementById('homeBtn').addEventListener('click', () => goToSlide(0));
-  document.getElementById('prevBtn').addEventListener('click', () => goToSlide(currentSlide - 1));
-  document.getElementById('nextBtn').addEventListener('click', () => goToSlide(currentSlide + 1));
-  document.getElementById('menuBtn').addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(); });
-  document.getElementById('fullscreenBtn').addEventListener('click', () => {
-    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-    else document.exitFullscreen();
-  });
+        let touchX = 0;
+        document.addEventListener("touchstart", (e) => {
+          touchX = e.touches[0].clientX;
+        });
+        document.addEventListener("touchend", (e) => {
+          const diff = touchX - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 50)
+            diff > 0
+              ? goToSlide(currentSlide + 1)
+              : goToSlide(currentSlide - 1);
+        });
 
-  document.addEventListener('keydown', (e) => {
-    if (['ArrowRight', ' '].includes(e.key)) { e.preventDefault(); goToSlide(currentSlide + 1); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); goToSlide(currentSlide - 1); }
-    else if (e.key === 'Home' || e.key === 'h' || e.key === 'H') { e.preventDefault(); goToSlide(0); }
-    else if (e.key === 'End') { e.preventDefault(); goToSlide(totalSlides - 1); }
-    else if (e.key === 'f' || e.key === 'F') document.getElementById('fullscreenBtn').click();
-    else if (e.key === 'Escape') { toggleDropdown(false); document.getElementById('lightbox').classList.remove('open'); }
-  });
+        document.addEventListener("click", (e) => {
+          if (
+            dropdownOpen &&
+            !dropdown.contains(e.target) &&
+            e.target.id !== "menuBtn"
+          )
+            toggleDropdown(false);
+        });
 
-  let touchX = 0;
-  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
-  document.addEventListener('touchend', e => {
-    const diff = touchX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) diff > 0 ? goToSlide(currentSlide + 1) : goToSlide(currentSlide - 1);
-  });
-
-  document.addEventListener('click', (e) => {
-    if (dropdownOpen && !dropdown.contains(e.target) && e.target.id !== 'menuBtn') toggleDropdown(false);
-  });
-
-  updateUI();
-})();
-</script>
-</body>
+        updateUI();
+      })();
+    </script>
+  </body>
 </html>
