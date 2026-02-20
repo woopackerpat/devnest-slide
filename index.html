@@ -447,6 +447,124 @@ body{
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--text-muted);border-radius:4px}
+
+/* ═══════════════════════════════════
+   MOBILE RESPONSIVE
+═══════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Allow slide content to scroll vertically */
+  body { overflow: hidden; }
+  .slide {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 18px 90px;
+  }
+  .slide-content { overflow: visible; justify-content: flex-start; margin-top: 4px; }
+
+  /* Heading block */
+  .slide-header { margin-bottom: 20px; }
+  .slide-title {
+    font-size: clamp(24px, 6vw, 40px);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .slide-subtitle {
+    font-size: clamp(13px, 3.5vw, 17px);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  /* Cards grid → single column, gap เพิ่ม */
+  .cards-grid.cols-2,
+  .cards-grid.cols-3,
+  .cards-grid.cols-4 { grid-template-columns: 1fr; gap: 12px; }
+
+  /* Card padding & spacing */
+  .card { padding: 16px 18px; border-radius: 16px; }
+  .card-icon { font-size: 28px; margin-bottom: 8px; }
+  .card-title { font-size: 16px; margin-bottom: 6px; }
+  .card-desc { font-size: 14px; line-height: 1.6; }
+  .card-tag { margin-top: 10px; }
+
+  /* Tech stack: 2 columns */
+  .tech-cols { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .tc { padding: 14px; border-radius: 14px; }
+  .tc-t { margin-bottom: 10px; padding-bottom: 8px; font-size: 11px; }
+  .tg { font-size: 13px; padding: 5px 10px; }
+
+  /* Two-col → stack */
+  .two-col { grid-template-columns: 1fr; gap: 20px; }
+  .col-section { gap: 10px; }
+  .section-label { margin-bottom: 8px; font-size: 13px; }
+  .bullet-list { gap: 10px; }
+  .bullet-list li { font-size: 14px; line-height: 1.6; }
+
+  /* Track comparison → stack */
+  .track-grid { grid-template-columns: 1fr; gap: 14px; }
+  .track-card { padding: 18px; border-radius: 16px; }
+  .track-head { font-size: 20px; margin-bottom: 4px; }
+  .track-dur { margin-bottom: 14px; }
+  .track-item { font-size: 14px; padding: 9px 0; }
+
+  /* Mini cards → full width, gap เพิ่ม */
+  .split-row { flex-direction: column; gap: 12px; }
+  .mini-card { min-width: 100%; max-width: 100%; padding: 16px 18px; border-radius: 14px; }
+  .mini-card-title { font-size: 15px; margin-bottom: 10px; }
+  .mini-card ul { gap: 8px; }
+  .mini-card ul li { font-size: 14px; line-height: 1.55; }
+
+  /* Photo grid → single column */
+  .photo-grid { grid-template-columns: 1fr; gap: 12px; }
+  .photo-item { border-radius: 16px; }
+
+  /* Team grids → 2 columns */
+  .team-grid-4 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .team-grid-3 { grid-template-columns: repeat(2, 1fr); max-width: 100%; gap: 12px; }
+  .team-card { padding: 16px 12px; gap: 7px; border-radius: 16px; }
+  .team-card img { width: 72px; height: 72px; border-width: 3px; }
+  .team-card.mentor img { width: 82px; height: 82px; }
+  .team-name { font-size: 14px; }
+  .team-role { font-size: 11px; }
+  .team-tag { font-size: 10px; padding: 2px 7px; }
+
+  /* Flow: stack steps vertically */
+  .flow-container { gap: 12px; }
+  .flow-row { flex-direction: column; align-items: stretch; gap: 8px; }
+  .flow-arrow { display: none; }
+  .flow-step {
+    white-space: normal;
+    justify-content: flex-start;
+    font-size: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+  .flow-step .icon { font-size: 16px; }
+
+  /* Nav bar — compact */
+  .nav-bar { padding: 6px 10px; gap: 6px; bottom: 10px; }
+  .nav-btn { width: 32px; height: 32px; font-size: 14px; }
+  .nav-counter { font-size: 11px; min-width: 36px; }
+  .nav-dot { width: 6px; height: 6px; }
+  .nav-dot.active { width: 16px; }
+
+  /* Cover */
+  .cover-logo-img { max-height: 52px; }
+  .cover-roles { gap: 8px; margin-top: 4px; }
+  .role-chip { font-size: 13px; padding: 8px 16px; }
+
+  /* Fullscreen button */
+  .fullscreen-btn { top: 10px; right: 10px; }
+
+  /* Page dropdown */
+  .page-dropdown { min-width: 240px; max-height: 50vh; }
+}
+
+@media (max-width: 480px) {
+  .tech-cols { grid-template-columns: 1fr; }
+  .team-grid-4,
+  .team-grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .slide { padding: 16px 16px 84px; }
+}
 </style>
 </head>
 <body>
@@ -493,7 +611,7 @@ body{
         <div class="track-item"><span class="ico iy">✓</span> Node.js, Express, PostgreSQL</div>
         <div class="track-item"><span class="ico iy">✓</span> <strong>Next.js</strong></div>
         <div class="track-item"><span class="ico iy">✓</span> <strong>NestJS</strong></div>
-        <div class="track-item"><span class="ico iy">✓</span> <strong>Group Project + AI Workflow</strong></div>
+        <div class="track-item"><span class="ico iy">✓</span> <strong>Group Project + AI Tools for Devs</strong></div>
         <div class="track-item"><span class="ico iy">✓</span> Personal Project + Demo Day</div>
       </div>
       <div class="track-card track-onl anim-item">
